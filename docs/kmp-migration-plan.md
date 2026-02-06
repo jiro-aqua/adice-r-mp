@@ -97,19 +97,30 @@
 1. [完了]Android 依存の再棚卸し（KMP 移植前）
    - 既存の Android 依存箇所を再確認し、`docs/android-dependencies.md` に整理する。
    - 共有化対象と Android 専用層の切り分け方針を整理する。
-1. 依存ライブラリの置換（Android 依存排除フェーズ）
+1. [完了]依存ライブラリの置換（Android 依存排除フェーズ）
    - `java.nio` 置換:
    - `RandomAccessFile` → `okio.FileHandle` / `okio.Source`
    - `ByteBuffer` → `ByteArray` + 明示的なリトルエンディアン操作
    - 参照キャッシュ（`WeakReference` / `SoftReference`）→ KMP で動作する LRU 等に置換
    - インデックスキャッシュ入出力（`FileInputStream` / `FileOutputStream`）→ Okio `Source` / `Sink` へ抽象化
-1. KMP 構成の新設
+1. [完了]KMP 構成の新設
    - プロジェクト構成を KMP(Android/Desktop)向けに構成を変更
-   - モジュール構成: `shared` / `androidApp` / `desktopApp` を想定。
    - ターゲット: `android()`, `jvm("desktop")` を基本とする。
    - 依存整理: `okio`, `kotlinx.coroutines`, Compose MP, テスト（`kotlin.test`）。
    - 既存 `app/` の Gradle を KMP 構成に合わせて段階移行する。
+1. android依存処理をラッパーを作ってcommonMainとandroidMainに分割する
+   - 
+1. 共通化できるところをcommonMainで共通化
+   - WebViewでレイアウトを作っている画面を、composeでレイアウトする
+   - 辞書ダウンロード処理をcommonMainに移動
+1. assets/resourceをcompose resourcesに移動
+1. フォントは一旦無効化
+1. androidMainの処理をcommonMainに移動していく
    - テストを `commonTest`/ に寄せ、KMP で共有できる形にする。
+1. フォントをcompose resourcesに入れてcompose MPで使用する
+1. IMEの制御を追加
+1. カラーリングをオリジナルに合わせて調整
+1. 初回起動→辞書DLの際の画面遷移で問題が出るのでデバッグ
 1. Compose MP への共通化と Desktop 対応
    - 既存 Compose UI を Compose MP へ共有できる形に整理。
    - Desktop 向け UI を Compose MP で追加。
