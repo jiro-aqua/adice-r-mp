@@ -15,35 +15,37 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     jvm()
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
-            implementation("androidx.appcompat:appcompat:1.7.1")
-            implementation("androidx.navigation:navigation-fragment-ktx:2.9.6")
-            implementation("androidx.navigation:navigation-ui-ktx:2.9.6")
-            implementation("androidx.preference:preference-ktx:1.2.1")
+            implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.navigation.fragment.ktx)
+            implementation(libs.androidx.navigation.ui.ktx)
+            implementation(libs.androidx.preference.ktx)
 
             // Compose Core
-            implementation( "androidx.compose.ui:ui:1.10.2")
-            implementation ("androidx.compose.ui:ui-graphics:1.10.2")
-            implementation ("androidx.compose.ui:ui-tooling-preview:1.10.2")
-            implementation ("androidx.compose.material3:material3:1.4.0")
-            implementation ("androidx.compose.material:material-icons-extended:1.7.8")
-
-            // Compose Activity Integration
-            implementation ("androidx.activity:activity-compose:1.10.1")
+            implementation(libs.androidx.compose.ui)
+            implementation(libs.androidx.compose.ui.graphics)
+            implementation(libs.androidx.compose.ui.tooling.preview)
+            implementation(libs.androidx.compose.material3)
+            implementation(libs.androidx.compose.material.icons.extended)
 
             // Compose Navigation
-            implementation ("androidx.navigation:navigation-compose:2.9.6")
-            implementation("com.squareup.okhttp3:okhttp:5.3.2")
-            implementation("com.squareup.okio:okio:3.9.0")
-            // okhttp
-            implementation("com.squareup.okhttp3:okhttp:5.3.2")
-            implementation("com.squareup.okio:okio:3.9.0")        }
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.okhttp)
+            implementation(libs.okio)
+        }
+        androidUnitTest.dependencies {
+            implementation(libs.icu4j)
+            implementation(libs.icu4j.charset)
+            implementation(libs.gson)
+        }
+        androidInstrumentedTest.dependencies {
+        }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -61,6 +63,8 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+        }
+        jvmTest.dependencies {
         }
     }
 }
