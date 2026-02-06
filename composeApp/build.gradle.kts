@@ -28,7 +28,7 @@ kotlin {
         androidUnitTest.dependencies {
             implementation(libs.icu4j)
             implementation(libs.icu4j.charset)
-            implementation(libs.gson)
+            implementation(libs.kotlinx.serialization.json)
         }
         androidInstrumentedTest.dependencies {
         }

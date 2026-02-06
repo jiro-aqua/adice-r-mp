@@ -1,6 +1,8 @@
 package jp.sblo.pandora.dice
 
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
@@ -9,6 +11,7 @@ import java.time.OffsetDateTime
 
 object DiceDumpMain {
     private val fileSystem = FileSystem.SYSTEM
+    private val json = Json { prettyPrint = true }
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -23,7 +26,6 @@ object DiceDumpMain {
         )
         val dir = dictionariesDir(dictionaries)
 
-        val gson = GsonBuilder().setPrettyPrinting().create()
         dictionaries.forEach { name ->
             val path = (dir / name).toString()
             val (dice, dicNum, index) = openDictionary(path)
@@ -76,7 +78,7 @@ object DiceDumpMain {
 
                 val outputFile = outputDir / "${name}_indexdump.json"
                 fileSystem.sink(outputFile).buffer().use { sink ->
-                    sink.writeUtf8(gson.toJson(dump))
+                    sink.writeUtf8(json.encodeToString(dump))
                 }
             } finally {
                 closeDictionary(dice, index)
@@ -115,6 +117,7 @@ object DiceDumpMain {
 
 }
 
+@Serializable
 data class DiceIndexDump(
     val version: Int,
     val generatedAt: String,
@@ -122,6 +125,7 @@ data class DiceIndexDump(
     val entries: List<DiceIndexDumpEntry>
 )
 
+@Serializable
 data class DiceIndexDumpEntry(
     val index: String,
     val trans: String,
