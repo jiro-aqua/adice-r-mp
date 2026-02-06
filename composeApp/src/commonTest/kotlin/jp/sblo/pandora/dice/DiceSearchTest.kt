@@ -1,6 +1,5 @@
 package jp.sblo.pandora.dice
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import okio.Path

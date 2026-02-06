@@ -1,7 +1,5 @@
 package jp.sblo.pandora.dice
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import okio.Path
@@ -117,19 +115,3 @@ object DiceDumpMain {
 
 }
 
-@Serializable
-data class DiceIndexDump(
-    val version: Int,
-    val generatedAt: String,
-    val dictionary: String,
-    val entries: List<DiceIndexDumpEntry>
-)
-
-@Serializable
-data class DiceIndexDumpEntry(
-    val index: String,
-    val trans: String,
-    val phone: String,
-    val sample: String,
-    val disp: String,
-)

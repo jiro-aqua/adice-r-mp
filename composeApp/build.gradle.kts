@@ -28,7 +28,6 @@ kotlin {
         androidUnitTest.dependencies {
             implementation(libs.icu4j)
             implementation(libs.icu4j.charset)
-            implementation(libs.kotlinx.serialization.json)
         }
         androidInstrumentedTest.dependencies {
         }
@@ -48,8 +47,10 @@ kotlin {
             //okio/okhttp
             implementation(libs.okhttp)
             implementation(libs.okio)
+
             // kotlin serialization
             implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
