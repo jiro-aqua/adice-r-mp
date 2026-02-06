@@ -43,7 +43,8 @@
   <string name="noresulthtml">一致するものはありませんでした。</string>
   <string name="morebtn">続きを読む</string>
   <string name="description">aDice RevisedはPDIC形式の辞書ビューワーです</string>
-  <string name="manual"> &lt;a href=&quot;http://sites.google.com/site/aquamarinepandora/home/adice_ja&quot;&gt;機能紹介&lt;/a&gt; </string>
+  <string name="manual">機能紹介</string>
+  <string name="manual_url">http://sites.google.com/site/aquamarinepandora/home/adice_ja</string>
   <string name="about_name">aDice Revisedについて</string>
   <string name="fontsizeindex">見出し語フォントサイズ</string>
   <string name="fontsizephone">発音記号フォントサイズ</string>
@@ -84,8 +85,9 @@
   <string name="fontsample">用例フォント</string>
   <string name="dldictionarytitle">無料辞書をダウンロードする</string>
   <string name="install_name">辞書インストール</string>
-  <string name="install_url">file:///android_asset/installja.html</string>
   <string name="install_title">ダウンロード</string>
+  <string name="install_disclaimer">このページの辞書は、「無償」であるかぎり自由に転載・配布が可能です。これらのファイルを利用することによって生じた損害等について、作者は責任を負わないものとします。各自の責任においてご利用下さい。</string>
+  <string name="install_action">インストール</string>
   <string name="download_ok">ダウンロード成功しました</string>
   <string name="download_ng">ダウンロード失敗しました</string>
   <string name="download_process">ダウンロード処理中</string>
@@ -102,6 +104,10 @@
   <string name="dicname_edict">EDICT和英辞書</string>
   <string name="dicname_webster">Webster英英辞典1913年版</string>
   <string name="dicname_ichirofj">ICHIRO f2jdic仏和辞書</string>
+  <string name="install_provider_pdej">(c) Yoshi</string>
+  <string name="install_provider_edict">by Yoshi</string>
+  <string name="install_provider_webster">by Yoshi</string>
+  <string name="install_provider_ichiro">(c) ICHIRO</string>
   <string name="menu_add_wordlist">単語帳に登録</string>
   <string name="add_wordlist_msg">単語帳として「TanGo単語帳」が必要です。\n今すぐダウンロードしますか？</string>
   <string name="normalize">検索語の正規化</string>

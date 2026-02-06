@@ -43,7 +43,8 @@
 	<string name="noresulthtml">No result.</string>
 	<string name="morebtn">more</string>
 	<string name="description">aDice Revised is the viewer for dictionaries of PDIC format.</string>
-	<string name="manual"> &lt;a href=&quot;http://sites.google.com/site/aquamarinepandora/home/adice&quot;&gt;Introduction of aDice Revised.&lt;/a&gt; </string>
+	<string name="manual">Introduction of aDice Revised.</string>
+	<string name="manual_url">http://sites.google.com/site/aquamarinepandora/home/adice</string>
 	<string name="about_name">About aDice Revised...</string>
 	<string name="fontsizeindex">Font size of Index</string>
 	<string name="fontsizephone">Font size of Phone</string>
@@ -84,8 +85,9 @@
 	<string name="fontsample">Font of Sample</string>
 	<string name="dldictionarytitle">Download Free Dictionary</string>
 	<string name="install_name">Install dictionary</string>
-	<string name="install_url">file:///android_asset/install.html</string>
 	<string name="install_title">Download</string>
+	<string name="install_disclaimer">The dictionaries in this page MUST be re-distributed free of charge. The author is not responsible for any kind of damages or loss while using or misusing these files, which are distributed \"AS IS\". No warranty of any kind is expressed or implied. You use AT YOUR OWN RISK.</string>
+	<string name="install_action">Install</string>
 	<string name="download_ok">Download successed</string>
 	<string name="download_ng">Download failed</string>
 	<string name="download_process">In Processing...</string>
@@ -102,6 +104,10 @@
 	<string name="dicname_edict">EDICT Japanese-English Dictionary</string>
 	<string name="dicname_webster">Webster English Dictionary 1913</string>
 	<string name="dicname_ichirofj">ICHIRO French-Japanese Dictionary</string>
+	<string name="install_provider_pdej">(c) Yoshi</string>
+	<string name="install_provider_edict">by Yoshi (c) EDICT</string>
+	<string name="install_provider_webster">by Yoshi</string>
+	<string name="install_provider_ichiro">(c) ICHIRO</string>
 	<string name="menu_add_wordlist">Add to Wordbook</string>
 	<string name="add_wordlist_msg">You need the \"TanGo Wordbook\" Application.\nDo you want to download now？</string>
 	<string name="normalize">Normalization of search word</string>
