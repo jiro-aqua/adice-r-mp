@@ -11,7 +11,6 @@ import okio.Path.Companion.toPath
 import okio.buffer
 import okio.openZip
 import okio.source
-import java.util.Locale
 
 class DownloadRepository {
     private val fileSystem = FileSystem.SYSTEM
@@ -85,7 +84,7 @@ class DownloadRepository {
             return null
         }
         for (child in children) {
-            if (child.name.lowercase(locale = Locale.US).endsWith(".dic")) {
+            if (child.name.endsWith(".dic", ignoreCase = true)) {
                 return child
             }
             val nested = findDicEntry(zipFs, child)

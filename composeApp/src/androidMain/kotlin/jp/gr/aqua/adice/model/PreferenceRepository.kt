@@ -5,7 +5,6 @@ import androidx.preference.PreferenceManager
 import jp.gr.aqua.adice.AdiceApplication
 import jp.gr.aqua.adice.BuildConfig
 import jp.gr.aqua.adice.R
-import java.util.regex.Pattern
 
 class PreferenceRepository {
 
@@ -42,11 +41,13 @@ class PreferenceRepository {
 
                 // 辞書名自動判定
                 for (i in DICNTEMPLATE.indices) {
-                    val p = Pattern.compile(DICNTEMPLATE[i].pattern, Pattern.CASE_INSENSITIVE)
-                    val m = p.matcher(name)
-                    if (m.find()) {
-                        val dicname = if (m.groupCount() > 0) {
-                            val edt = m.group(1)
+                    val match = Regex(
+                            pattern = DICNTEMPLATE[i].pattern,
+                            option = RegexOption.IGNORE_CASE
+                    ).find(name)
+                    if (match != null) {
+                        val dicname = if (match.groupValues.size > 1) {
+                            val edt = match.groupValues[1]
                             ContextModel.resources.getString(DICNTEMPLATE[i].resourceDicname, edt)
                         } else {
                             ContextModel.resources.getString(DICNTEMPLATE[i].resourceDicname)

@@ -1,8 +1,6 @@
 package jp.gr.aqua.adice.model
 
 import android.graphics.Typeface
-import java.util.ArrayList
-import java.util.regex.Pattern
 
 data class ResultModel(
         val mode: Mode,
@@ -21,6 +19,15 @@ data class ResultModel(
         val transSize: Int = 0,
         val sampleSize: Int = 0
         ) {
+    private companion object {
+        val EIJIRO_LINK_REGEX = Regex("<(→(.+?))>")
+        val WAEI_LINK_REGEX = Regex("(→　(.+))")
+        val RYAKUJIRO_LINK_REGEX = Regex("(＝(.+))●")
+        val PAST_TENSE_REGEX = Regex("(《動》(.+)(の過去形|の過去分詞形))")
+        val SYNONYM_REGEX = Regex("(【([同|類])】([a-zA-Z; ]+))")
+        val CONJUGATION_REGEX = Regex("(【変化】《動》([a-zA-Z| ]+))")
+        val UK_LINK_REGEX = Regex("(〈英〉→(.+))")
+    }
 
     fun allText() : String{
         val all = StringBuilder()
@@ -44,35 +51,27 @@ data class ResultModel(
 
         trans?.let{
             trans->
+            val transText = trans.toString()
             // <→リンク> 英辞郎形式
             run {
-                val p = Pattern.compile("<(→(.+?))>")
-                val m = p.matcher(trans)
-
-                while (m.find()) {
-                    disps.add(m.group(1)!!)
-                    items.add(m.group(2)!!)
+                EIJIRO_LINK_REGEX.findAll(transText).forEach { match ->
+                    disps.add(match.groupValues[1])
+                    items.add(match.groupValues[2])
                 }
             }
             // "→　" 和英辞郎形式
             run {
-                val p = Pattern.compile("(→　(.+))")
-                val m = p.matcher(trans)
-
-                while (m.find()) {
-                    disps.add(m.group(1)!!)
-                    items.add(m.group(2)!!)
+                WAEI_LINK_REGEX.findAll(transText).forEach { match ->
+                    disps.add(match.groupValues[1])
+                    items.add(match.groupValues[2])
                 }
             }
 
             // "＝リンク●" 略辞郎形式
             run {
-                val p = Pattern.compile("(＝(.+))●")
-                val m = p.matcher(trans)
-
-                while (m.find()) {
-                    disps.add(m.group(1)!!)
-                    val item = m.group(2)!!
+                RYAKUJIRO_LINK_REGEX.findAll(transText).forEach { match ->
+                    disps.add(match.groupValues[1])
+                    val item = match.groupValues[2]
                     if ( item.contains(";") ){
                         val split = item.split(";")
                         items.add(split[0])
@@ -83,22 +82,16 @@ data class ResultModel(
             }
             // 過去形・過去分詞形　英辞郎形式
             run {
-                val p = Pattern.compile("(《動》(.+)(の過去形|の過去分詞形))")
-                val m = p.matcher(trans)
-
-                while (m.find()) {
-                    disps.add(m.group(1)!!)
-                    items.add(m.group(2)!!)
+                PAST_TENSE_REGEX.findAll(transText).forEach { match ->
+                    disps.add(match.groupValues[1])
+                    items.add(match.groupValues[2])
                 }
             }
             // 【同】　英辞郎形式
             run {
-                val p = Pattern.compile("(【([同|類])】([a-zA-Z; ]+))")
-                val m = p.matcher(trans)
-
-                while (m.find()) {
-                    val title = m.group(2)!!
-                    val synonymous = m.group(3)!!
+                SYNONYM_REGEX.findAll(transText).forEach { match ->
+                    val title = match.groupValues[2]
+                    val synonymous = match.groupValues[3]
                     val splited = synonymous.split(";")
                     splited.forEach{
                         disps.add("【$title】$it")
@@ -108,11 +101,8 @@ data class ResultModel(
             }
             // 【変化】　英辞郎形式
             run {
-                val p = Pattern.compile("(【変化】《動》([a-zA-Z| ]+))")
-                val m = p.matcher(trans)
-
-                while (m.find()) {
-                    val synonymous = m.group(2)!!
+                CONJUGATION_REGEX.findAll(transText).forEach { match ->
+                    val synonymous = match.groupValues[2]
                     val splited = synonymous.split("|")
                     splited.forEach{
                         disps.add("【変化】$it")
@@ -122,12 +112,9 @@ data class ResultModel(
             }
             // 〈英〉→　英辞郎形式
             run {
-                val p = Pattern.compile("(〈英〉→(.+))")
-                val m = p.matcher(trans)
-
-                while (m.find()) {
-                    disps.add(m.group(1)!!)
-                    items.add(m.group(2)!!)
+                UK_LINK_REGEX.findAll(transText).forEach { match ->
+                    disps.add(match.groupValues[1])
+                    items.add(match.groupValues[2])
                 }
             }
         }
