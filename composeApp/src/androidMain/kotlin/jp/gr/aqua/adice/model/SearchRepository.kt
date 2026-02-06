@@ -236,7 +236,7 @@ class SearchRepository {
                         dicname = mDice.getDicInfo(dic).GetFilename()
                     }
                     val data = ResultModel(mode=ResultModel.Mode.FOOTER, dic=dic,
-                            index = String.format(mFooter, dicname!!),
+                            index = String.format(mFooter, dicname),
                             indexSize = 16)
 
                     if (pos == -1) {

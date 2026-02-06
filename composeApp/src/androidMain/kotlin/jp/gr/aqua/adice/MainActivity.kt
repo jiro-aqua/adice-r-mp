@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
 import jp.gr.aqua.adice.model.ContextModel
 import jp.gr.aqua.adice.ui.navigation.AdiceNavHost
 import jp.gr.aqua.adice.ui.theme.AdiceTheme
@@ -39,9 +38,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
                     AdiceNavHost(
-                        navController = navController,
                         initialText = initialText
                     )
                 }

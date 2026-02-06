@@ -31,7 +31,7 @@ class DownloadRepository {
                     .build()
 
             client.newCall(request).execute().use { response ->
-                val body = response.body?.byteStream() ?: return@use null
+                val body = response.body.byteStream()
 
                 if (url.endsWith(".dic")) {
                     val dst = STORAGE / getName(url)

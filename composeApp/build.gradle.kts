@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
@@ -20,24 +21,9 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
-            implementation(libs.androidx.navigation.fragment.ktx)
-            implementation(libs.androidx.navigation.ui.ktx)
             implementation(libs.androidx.preference.ktx)
-
-            // Compose Core
-            implementation(libs.androidx.compose.ui)
-            implementation(libs.androidx.compose.ui.graphics)
-            implementation(libs.androidx.compose.ui.tooling.preview)
-            implementation(libs.androidx.compose.material3)
-            implementation(libs.androidx.compose.material.icons.extended)
-
-            // Compose Navigation
-            implementation(libs.androidx.navigation.compose)
-            implementation(libs.okhttp)
-            implementation(libs.okio)
         }
         androidUnitTest.dependencies {
             implementation(libs.icu4j)
@@ -50,12 +36,20 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
+            implementation(libs.compose.materialIconsExtended)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.compose.lifecycle.viewmodel)
+            implementation(libs.compose.lifecycle.runtime)
+            implementation(libs.compose.navigation3.runtime)
+            implementation(libs.compose.navigation3.ui)
 
+            //okio/okhttp
+            implementation(libs.okhttp)
+            implementation(libs.okio)
+            // kotlin serialization
+            implementation(libs.kotlinx.serialization.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
