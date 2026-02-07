@@ -149,16 +149,17 @@ class SearchRepository {
 
     // 英語向けIRREG読込
     private fun loadIrreg() {
-        val name = "IrregDic.txt"
+        val name = "files/irregdic.txt"
         val irreg = HashMap<String, String>()
-        ContextModel.assets.open(name).reader(charset = Charsets.UTF_8).use{
-            it.readLines().forEach{
-                line->
-                val s = line.split('\t')
+        val content = runBlocking { String(Res.readBytes(name), Charsets.UTF_8) }
+        content.lineSequence().forEach { rawLine ->
+            val line = rawLine.trimEnd('\r')
+            val s = line.split('\t', limit = 2)
+            if (s.size == 2) {
                 irreg[s[0]] = s[1]
             }
-            Log.i(TAG, "Open OK:$name")
         }
+        Log.i(TAG, "Open OK:$name")
         mDice.setIrreg(irreg)
     }
 
