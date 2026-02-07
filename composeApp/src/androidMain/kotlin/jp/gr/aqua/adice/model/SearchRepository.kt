@@ -7,18 +7,19 @@ import adicermp.composeapp.generated.resources.start_footer
 import adicermp.composeapp.generated.resources.start_title
 import adicermp.composeapp.generated.resources.trans_text_size
 import adicermp.composeapp.generated.resources.trans_text_size_large
-import jp.gr.aqua.adice.BuildConfig
 import jp.sblo.pandora.dice.DiceFactory
 import jp.sblo.pandora.dice.IdicInfo
 import jp.sblo.pandora.dice.IdicResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class SearchRepository {
+class SearchRepository : KoinComponent {
     private var mInitialized = false
 
     private val mDice = DiceFactory.getInstance()
@@ -30,6 +31,8 @@ class SearchRepository {
     private lateinit var mFooter: String
     private lateinit var mDescription: String
     private var transTextSize: Int = 0
+
+    private val preferenceRepository: PreferenceRepository by inject()
 
     fun initialize() {
         loadResources()
@@ -103,19 +106,19 @@ class SearchRepository {
     fun applySettings() {
         mLast = ""
 
-        val settings = PreferenceRepository().readGeneralSettings()
+        val settings = preferenceRepository.readGeneralSettings()
         mNormalize = settings.normalize
 
         for (i in 0 until mDice.dicNum) {
             val dicinfo = mDice.getDicInfo(i)
             val name = dicinfo.GetFilename()
-            applyDictionarySettings(dicinfo, PreferenceRepository().readDictionarySettings(name))
+            applyDictionarySettings(dicinfo, preferenceRepository.readDictionarySettings(name))
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     private fun initDice() {
-        val dicss = PreferenceRepository().getDics()
+        val dicss = preferenceRepository.getDics()
         val dics = dicss.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }
 
         // 外部辞書読込
@@ -131,7 +134,7 @@ class SearchRepository {
                 if (!dicinfo.readIndexBlock(DictionaryRepository().indexCacheAccessor(name))) {
                     mDice.close(dicinfo)
                 } else {
-                    applyDictionarySettings(dicinfo, PreferenceRepository().readDictionarySettings(name))
+                    applyDictionarySettings(dicinfo, preferenceRepository.readDictionarySettings(name))
                 }
             } else {
                 println("$TAG: Open NG:$name")
@@ -139,7 +142,7 @@ class SearchRepository {
         }
     }
 
-    private fun applyDictionarySettings(dicinfo: IdicInfo, settings: PreferenceRepository.DictionarySettings) {
+    private fun applyDictionarySettings(dicinfo: IdicInfo, settings: DictionarySettings) {
         dicinfo.SetDicName(settings.dicname)
         dicinfo.SetEnglish(settings.english)
         dicinfo.SetNotuse(!settings.use)
@@ -259,8 +262,8 @@ class SearchRepository {
                     result.add(data)
                 }
                 DISP_MODE_START -> {
-                    val versionName = BuildConfig.VERSION_NAME
-                    val versionCode = BuildConfig.VERSION_CODE
+                    val versionName = ContextModel.versionName
+                    val versionCode = ContextModel.versionCode
                     val version = "Ver. " + String.format("%s (%d)", versionName, versionCode)
                     val title = runBlocking { getString(Res.string.start_title) }
                     val footer = runBlocking { getString(Res.string.start_footer) }

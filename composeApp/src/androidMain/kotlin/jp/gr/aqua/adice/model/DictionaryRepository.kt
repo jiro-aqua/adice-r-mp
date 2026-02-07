@@ -12,10 +12,13 @@ import okio.Path
 import okio.Path.Companion.toPath
 import okio.buffer
 import okio.source
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class DictionaryRepository {
+class DictionaryRepository : KoinComponent{
     private val mDice = DiceFactory.getInstance()
     private val fileSystem = FileSystem.SYSTEM
+    private val preferenceRepository: PreferenceRepository by inject()
 
     private suspend fun createIndex(dicname: String, english: Boolean, defname: String) : Boolean
     {
@@ -39,7 +42,7 @@ class DictionaryRepository {
                     mDice.close(dicinfo)
                 } else {
                     failed = false
-                    PreferenceRepository().setDefaultSettings(dicname, defname, english)
+                    preferenceRepository.setDefaultSettings(dicname, defname, english)
                 }
             }
             !failed
@@ -89,7 +92,7 @@ class DictionaryRepository {
 
     private fun writeDictionary() {
         val dics = List<String>(mDice.dicNum) { mDice.getDicInfo(it).GetFilename() }
-        PreferenceRepository().writeDics(dics)
+        preferenceRepository.writeDics(dics)
     }
     fun swap(name : String , up : Boolean) {
         val dir = if ( up ) -1 else 1
@@ -109,7 +112,7 @@ class DictionaryRepository {
         // 辞書削除
         fileSystem.delete(name.toSystemPath(), mustExist = false)
         // プレファレンスから削除
-        PreferenceRepository().removeDic(name)
+        preferenceRepository.removeDic(name)
     }
 
     // 辞書一覧取得

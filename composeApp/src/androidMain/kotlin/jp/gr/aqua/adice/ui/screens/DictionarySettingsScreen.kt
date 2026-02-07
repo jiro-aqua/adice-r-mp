@@ -52,8 +52,10 @@ import adicermp.composeapp.generated.resources.numberofresulttitle
 import adicermp.composeapp.generated.resources.removedictionarytitle
 import adicermp.composeapp.generated.resources.toastremoved
 import jp.gr.aqua.adice.model.DictionaryRepository
+import jp.gr.aqua.adice.model.DictionarySettings
 import jp.gr.aqua.adice.model.PreferenceRepository
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +64,7 @@ fun DictionarySettingsScreen(
     index: Int,
     onNavigateBack: () -> Unit
 ) {
-    val preferenceRepository = remember { PreferenceRepository() }
+    val preferenceRepository = koinInject<PreferenceRepository>()
     val dictionaryRepository = remember { DictionaryRepository() }
     val snackbarHostState = remember { SnackbarHostState() }
     val dicListSize = remember { dictionaryRepository.getDicList().size }
@@ -89,7 +91,7 @@ fun DictionarySettingsScreen(
     fun saveSettings() {
         preferenceRepository.updateDictionarySettings(
             filename,
-            PreferenceRepository.DictionarySettings(
+            DictionarySettings(
                 dicname = dicName,
                 english = isEnglish,
                 use = isEnabled,

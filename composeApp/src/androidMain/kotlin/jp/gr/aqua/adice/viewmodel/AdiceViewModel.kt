@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AdiceViewModel : ViewModel() {
-    private val searchRepository = SearchRepository()
+class AdiceViewModel(
+    private val searchRepository: SearchRepository
+) : ViewModel() {
 
     data class MainUiState(
         val searchWord: String = "",

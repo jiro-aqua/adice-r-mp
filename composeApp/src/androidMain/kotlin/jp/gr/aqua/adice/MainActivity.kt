@@ -17,11 +17,16 @@ import androidx.compose.ui.Modifier
 import jp.gr.aqua.adice.model.ContextModel
 import jp.gr.aqua.adice.ui.navigation.AdiceNavHost
 import jp.gr.aqua.adice.ui.theme.AdiceTheme
+import jp.gr.aqua.adice.viewmodel.AdiceViewModel
+import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.net.URLDecoder
 
 class MainActivity : ComponentActivity() {
 
     private var initialText by mutableStateOf("")
+    private val adiceViewModel: AdiceViewModel by viewModel()
+    private val settingsViewModel: PreferencesGeneralViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +44,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AdiceNavHost(
-                        initialText = initialText
+                        initialText = initialText,
+                        adiceViewModel = adiceViewModel,
+                        settingsViewModel = settingsViewModel
                     )
                 }
             }

@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.app_name
 import adicermp.composeapp.generated.resources.help
@@ -42,12 +41,13 @@ import jp.gr.aqua.adice.ui.components.SearchTextField
 import jp.gr.aqua.adice.viewmodel.AdiceViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     initialText: String = "",
-    viewModel: AdiceViewModel = viewModel(),
+    viewModel: AdiceViewModel,
     onNavigateToSettings: () -> Unit,
     onNavigateToAbout: () -> Unit,
     onNavigateToWelcomeDialog: () -> Unit,
@@ -61,159 +61,169 @@ fun MainScreen(
             viewModel.updateScreenSize(isLargeScreen)
         }
 
-    val uiState by viewModel.uiState.collectAsState()
-    val listState = rememberLazyListState()
-    val focusRequester = remember { FocusRequester() }
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    var showMenu by remember { mutableStateOf(false) }
+        val preferenceRepository = koinInject<PreferenceRepository>()
+        val uiState by viewModel.uiState.collectAsState()
+        val listState = rememberLazyListState()
+        val focusRequester = remember { FocusRequester() }
+        val coroutineScope = rememberCoroutineScope()
+        val context = LocalContext.current
+        var showMenu by remember { mutableStateOf(false) }
 
-    // Handle initial text from intent
-    LaunchedEffect(initialText) {
-        if (initialText.isNotEmpty() && uiState.searchWord != initialText) {
-            viewModel.updateSearchWord(initialText)
-            viewModel.search(initialText, loseFocus = true)
-        }
-    }
-
-    // Check for version update on first launch
-    LaunchedEffect(Unit) {
-        if (PreferenceRepository().isVersionUp()) {
-            onNavigateToWelcomeDialog()
-        }
-        if (uiState.searchWord.isEmpty() && uiState.results.isEmpty()) {
-            viewModel.startPage()
-            try {
-                focusRequester.requestFocus()
-            } catch (_: Exception) {}
-        }
-    }
-
-    // Resume behavior
-    LaunchedEffect(Unit) {
-        viewModel.onResume()
-    }
-
-    // Handle scroll reset
-    LaunchedEffect(uiState.resetScroll) {
-        if (uiState.resetScroll && uiState.results.isNotEmpty()) {
-            coroutineScope.launch {
-                listState.scrollToItem(0)
-            }
-            viewModel.clearScrollFlag()
-        }
-    }
-
-    // Handle focus loss
-    LaunchedEffect(uiState.loseFocus) {
-        if (uiState.loseFocus && uiState.results.isNotEmpty() &&
-            uiState.results[0].mode != ResultModel.Mode.NONE) {
-            viewModel.clearFocusFlag()
-        }
-    }
-
-    // Back handler for history
-    BackHandler {
-        var cs: CharSequence?
-        do {
-            cs = viewModel.popHistory()
-        } while (cs != null && uiState.searchWord == cs.toString())
-
-        if (cs != null) {
-            viewModel.updateSearchWord(cs.toString())
-            viewModel.search(cs.toString())
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                (context as? Activity)?.moveTaskToBack(false)
-            } else {
-                (context as? Activity)?.finish()
+        // Handle initial text from intent
+        LaunchedEffect(initialText) {
+            if (initialText.isNotEmpty() && uiState.searchWord != initialText) {
+                viewModel.updateSearchWord(initialText)
+                viewModel.search(initialText, loseFocus = true)
             }
         }
-    }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(Res.string.app_name)) },
-                actions = {
-                    IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Menu")
-                    }
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.settings)) },
-                            onClick = {
-                                showMenu = false
-                                onNavigateToSettings()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.help)) },
-                            onClick = {
-                                showMenu = false
-                                onNavigateToAbout()
-                            }
-                        )
-                    }
+        // Check for version update on first launch
+        LaunchedEffect(Unit) {
+            if (preferenceRepository.isVersionUp()) {
+                onNavigateToWelcomeDialog()
+            }
+            if (uiState.searchWord.isEmpty() && uiState.results.isEmpty()) {
+                viewModel.startPage()
+                try {
+                    focusRequester.requestFocus()
+                } catch (_: Exception) {
                 }
-            )
+            }
         }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            SearchTextField(
-                value = uiState.searchWord,
-                onValueChange = { viewModel.updateSearchWord(it) },
-                onSearch = { viewModel.search(it) },
-                onClear = {
-                    viewModel.pushHistory()
-                    viewModel.updateSearchWord("")
-                    viewModel.search("")
-                },
-                focusRequester = focusRequester
-            )
 
-            SearchResultList(
-                results = uiState.results,
-                listState = listState,
-                onItemClick = { position, data ->
-                    when (data.mode) {
-                        ResultModel.Mode.WORD -> {
-                            val (disps, items) = data.links()
-                            when {
-                                disps.size == 1 -> {
-                                    viewModel.pushHistory()
-                                    viewModel.updateSearchWord(items[0])
-                                    viewModel.search(items[0])
+        // Resume behavior
+        LaunchedEffect(Unit) {
+            viewModel.onResume()
+        }
+
+        // Handle scroll reset
+        LaunchedEffect(uiState.resetScroll) {
+            if (uiState.resetScroll && uiState.results.isNotEmpty()) {
+                coroutineScope.launch {
+                    listState.scrollToItem(0)
+                }
+                viewModel.clearScrollFlag()
+            }
+        }
+
+        // Handle focus loss
+        LaunchedEffect(uiState.loseFocus) {
+            if (uiState.loseFocus && uiState.results.isNotEmpty() &&
+                uiState.results[0].mode != ResultModel.Mode.NONE
+            ) {
+                viewModel.clearFocusFlag()
+            }
+        }
+
+        // Back handler for history
+        BackHandler {
+            var cs: CharSequence?
+            do {
+                cs = viewModel.popHistory()
+            } while (cs != null && uiState.searchWord == cs.toString())
+
+            if (cs != null) {
+                viewModel.updateSearchWord(cs.toString())
+                viewModel.search(cs.toString())
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    (context as? Activity)?.moveTaskToBack(false)
+                } else {
+                    (context as? Activity)?.finish()
+                }
+            }
+        }
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(Res.string.app_name)) },
+                    actions = {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(Res.string.settings)) },
+                                onClick = {
+                                    showMenu = false
+                                    onNavigateToSettings()
                                 }
-                                disps.size > 1 -> {
-                                    val title = data.index?.toString() ?: ""
-                                    onNavigateToResultClickDialog(title, disps.toList(), items.toList())
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(Res.string.help)) },
+                                onClick = {
+                                    showMenu = false
+                                    onNavigateToAbout()
+                                }
+                            )
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                SearchTextField(
+                    value = uiState.searchWord,
+                    onValueChange = { viewModel.updateSearchWord(it) },
+                    onSearch = { viewModel.search(it) },
+                    onClear = {
+                        viewModel.pushHistory()
+                        viewModel.updateSearchWord("")
+                        viewModel.search("")
+                    },
+                    focusRequester = focusRequester
+                )
+
+                SearchResultList(
+                    results = uiState.results,
+                    listState = listState,
+                    onItemClick = { position, data ->
+                        when (data.mode) {
+                            ResultModel.Mode.WORD -> {
+                                val (disps, items) = data.links()
+                                when {
+                                    disps.size == 1 -> {
+                                        viewModel.pushHistory()
+                                        viewModel.updateSearchWord(items[0])
+                                        viewModel.search(items[0])
+                                    }
+
+                                    disps.size > 1 -> {
+                                        val title = data.index?.toString() ?: ""
+                                        onNavigateToResultClickDialog(
+                                            title,
+                                            disps.toList(),
+                                            items.toList()
+                                        )
+                                    }
                                 }
                             }
+
+                            ResultModel.Mode.MORE -> {
+                                viewModel.more(position)
+                            }
+
+                            else -> {}
                         }
-                        ResultModel.Mode.MORE -> {
-                            viewModel.more(position)
+                    },
+                    onItemLongClick = { _, data ->
+                        if (data.mode == ResultModel.Mode.WORD) {
+                            val all = data.allText()
+                            val title = data.index?.toString() ?: ""
+                            onNavigateToResultLongClickDialog(title, all)
                         }
-                        else -> {}
-                    }
-                },
-                onItemLongClick = { _, data ->
-                    if (data.mode == ResultModel.Mode.WORD) {
-                        val all = data.allText()
-                        val title = data.index?.toString() ?: ""
-                        onNavigateToResultLongClickDialog(title, all)
-                    }
-                },
-                onMoreClick = { position -> viewModel.more(position) }
-            )
+                    },
+                    onMoreClick = { position -> viewModel.more(position) }
+                )
+            }
         }
-    }
     }
 }

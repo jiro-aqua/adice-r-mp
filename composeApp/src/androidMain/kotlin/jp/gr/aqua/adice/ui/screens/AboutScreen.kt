@@ -29,11 +29,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import jp.gr.aqua.adice.BuildConfig
+import jp.gr.aqua.adice.model.ContextModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -79,7 +78,7 @@ fun AboutScreen(
             }
             item {
                 Text(
-                    text = "Ver. ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+                    text = "Ver. ${ContextModel.versionName} (${ContextModel.versionCode})",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.adddictionarytitle
 import adicermp.composeapp.generated.resources.dictionaryimporttitle
@@ -55,18 +54,19 @@ import jp.gr.aqua.adice.model.PreferenceRepository
 import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
 import jp.sblo.pandora.dice.IdicInfo
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     downloadNow: Boolean = false,
-    viewModel: PreferencesGeneralViewModel = viewModel(),
+    viewModel: PreferencesGeneralViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToDictionarySettings: (String, Int) -> Unit,
     onNavigateToInstall: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val preferenceRepository = remember { PreferenceRepository() }
+    val preferenceRepository = koinInject<PreferenceRepository>()
     val dictionaryRepository = remember { DictionaryRepository() }
     val snackbarHostState = remember { SnackbarHostState() }
     var dicList by remember { mutableStateOf<List<IdicInfo>>(emptyList()) }

@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -43,8 +42,8 @@ sealed interface Screen : NavKey {
 @Composable
 fun AdiceNavHost(
     initialText: String = "",
-    adiceViewModel: AdiceViewModel = viewModel(),
-    settingsViewModel: PreferencesGeneralViewModel = viewModel()
+    adiceViewModel: AdiceViewModel,
+    settingsViewModel: PreferencesGeneralViewModel
 ) {
     val backStack = rememberNavBackStack(Screen.Main)
 

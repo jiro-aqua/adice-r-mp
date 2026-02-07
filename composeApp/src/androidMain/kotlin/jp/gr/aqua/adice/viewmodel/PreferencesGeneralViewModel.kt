@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PreferencesGeneralViewModel : ViewModel() {
-    private val downloadRepository = DownloadRepository()
-    private val dictionaryRepository = DictionaryRepository()
+class PreferencesGeneralViewModel(
+    private val downloadRepository: DownloadRepository,
+    private val dictionaryRepository: DictionaryRepository
+) : ViewModel() {
 
     data class SettingsUiState(
         val isDownloading: Boolean = false,

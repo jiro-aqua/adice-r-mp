@@ -24,6 +24,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.preference.ktx)
+            implementation(libs.koin.android)
+            implementation(libs.koin.android.compose)
         }
         androidUnitTest.dependencies {
             implementation(libs.icu4j)
