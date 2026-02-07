@@ -48,7 +48,7 @@ import adicermp.composeapp.generated.resources.toastadded
 import adicermp.composeapp.generated.resources.toasterror
 import jp.gr.aqua.adice.model.DictionaryRepository
 import jp.gr.aqua.adice.model.PreferenceRepository
-import jp.gr.aqua.adice.model.rememberAndroidDictionaryFilePickerPort
+import jp.gr.aqua.adice.model.rememberDictionaryFilePickerPort
 import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
 import jp.sblo.pandora.dice.IdicInfo
 import org.jetbrains.compose.resources.stringResource
@@ -87,7 +87,7 @@ fun SettingsScreen(
         refreshDicList()
     }
 
-    val dictionaryFilePicker = rememberAndroidDictionaryFilePickerPort { file ->
+    val dictionaryFilePicker = rememberDictionaryFilePickerPort { file ->
         viewModel.importDictionary(file)
     }
 

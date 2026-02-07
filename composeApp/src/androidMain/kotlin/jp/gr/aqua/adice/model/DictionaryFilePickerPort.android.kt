@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun rememberAndroidDictionaryFilePickerPort(
+actual fun rememberDictionaryFilePickerPort(
     onPicked: (PickedFileHandle) -> Unit
 ): DictionaryFilePickerPort {
     val context = LocalContext.current
