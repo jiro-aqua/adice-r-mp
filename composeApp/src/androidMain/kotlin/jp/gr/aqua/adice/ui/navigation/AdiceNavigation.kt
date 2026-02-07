@@ -1,6 +1,5 @@
 package jp.gr.aqua.adice.ui.navigation
 
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -146,15 +145,9 @@ fun AdiceNavHost(
             entry<Screen.Install> {
                 InstallScreen(
                     onNavigateBack = { popBackStack() },
-                    onDownloadResult = { url ->
-                        val uri = Uri.parse(url)
-                        if (uri.scheme == "adicer" && uri.host == "install") {
-                            val site = uri.getQueryParameter("site")
-                            val english = uri.getQueryParameter("english") == "true"
-                            val defname = uri.getQueryParameter("name") ?: ""
-                            if (!site.isNullOrEmpty()) {
-                                settingsViewModel.download(site, english, defname)
-                            }
+                    onDownloadResult = { name: String, english: Boolean, site: String ->
+                        if (site.isNotEmpty()) {
+                            settingsViewModel.download(site, english, name)
                         }
                         popBackStack()
                     }

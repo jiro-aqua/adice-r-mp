@@ -13,7 +13,6 @@ import adicermp.composeapp.generated.resources.install_provider_ichiro
 import adicermp.composeapp.generated.resources.install_provider_pdej
 import adicermp.composeapp.generated.resources.install_provider_webster
 import adicermp.composeapp.generated.resources.locale
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -44,7 +43,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun InstallScreen(
     onNavigateBack: () -> Unit,
-    onDownloadResult: (String) -> Unit
+    onDownloadResult: (name: String, english: Boolean, site: String) -> Unit
 ) {
     val installItems = if (stringResource(Res.string.locale) == "ja") {
         japaneseInstallItems()
@@ -95,11 +94,9 @@ fun InstallScreen(
                 Button(
                     onClick = {
                         onDownloadResult(
-                            buildInstallUri(
-                                name = title,
-                                english = item.english,
-                                site = item.site
-                            )
+                            title,
+                            item.english,
+                            item.site
                         )
                     },
                     modifier = Modifier
@@ -120,17 +117,6 @@ private data class InstallDictionaryItem(
     val english: Boolean,
     val site: String
 )
-
-private fun buildInstallUri(name: String, english: Boolean, site: String): String {
-    return Uri.Builder()
-        .scheme("adicer")
-        .authority("install")
-        .appendQueryParameter("name", name)
-        .appendQueryParameter("english", english.toString())
-        .appendQueryParameter("site", site)
-        .build()
-        .toString()
-}
 
 private fun englishInstallItems(): List<InstallDictionaryItem> {
     return listOf(
