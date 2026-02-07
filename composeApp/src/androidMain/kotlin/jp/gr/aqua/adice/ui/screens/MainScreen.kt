@@ -4,7 +4,6 @@ import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.app_name
 import adicermp.composeapp.generated.resources.help
 import adicermp.composeapp.generated.resources.settings
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +32,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.unit.dp
 import jp.gr.aqua.adice.model.PreferenceRepository
 import jp.gr.aqua.adice.model.ResultModel
+import jp.gr.aqua.adice.ui.components.CommonBackHandler
 import jp.gr.aqua.adice.ui.components.SearchResultList
 import jp.gr.aqua.adice.ui.components.SearchTextField
 import jp.gr.aqua.adice.viewmodel.AdiceViewModel
@@ -113,7 +113,7 @@ fun MainScreen(
         }
 
         // Back handler for history
-        BackHandler {
+        CommonBackHandler {
             var cs: CharSequence?
             do {
                 cs = viewModel.popHistory()
