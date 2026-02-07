@@ -6,9 +6,6 @@ import adicermp.composeapp.generated.resources.help
 import adicermp.composeapp.generated.resources.icon_logo
 import adicermp.composeapp.generated.resources.manual
 import adicermp.composeapp.generated.resources.manual_url
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -57,7 +54,6 @@ fun AboutScreen(
             )
         }
     ) { paddingValues ->
-        val context = LocalContext.current
         val uriHandler = LocalUriHandler.current
 
         LazyColumn(
@@ -97,7 +93,7 @@ fun AboutScreen(
                 ExternalLinkText(
                     text = stringResource(Res.string.manual),
                     url = stringResource(Res.string.manual_url),
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
             }
             item {
@@ -111,7 +107,7 @@ fun AboutScreen(
                 ExternalLinkText(
                     text = "http://pandora.sblo.jp/",
                     url = "http://pandora.sblo.jp",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
             }
             item {
@@ -129,7 +125,7 @@ fun AboutScreen(
                 ExternalLinkText(
                     text = "http://www.kmonos.net/nysl/NYSL.TXT",
                     url = "http://www.kmonos.net/nysl/NYSL.TXT",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
                 Text(
                     text = NYSL_LICENSE_TEXT,
@@ -154,7 +150,7 @@ fun AboutScreen(
                 ExternalLinkText(
                     text = "http://homepage3.nifty.com/TaN/unicode/",
                     url = "http://homepage3.nifty.com/TaN/unicode",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -162,17 +158,17 @@ fun AboutScreen(
                 ExternalLinkText(
                     text = "http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&item_id=DoulosSILfont",
                     url = "http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&item_id=DoulosSILfont",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
                 ExternalLinkText(
                     text = "http://scripts.sil.org/",
                     url = "http://scripts.sil.org/",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
                 ExternalLinkText(
                     text = "http://scripts.sil.org/OFL",
                     url = "http://scripts.sil.org/OFL",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -180,12 +176,12 @@ fun AboutScreen(
                 ExternalLinkText(
                     text = "https://square.github.io/okhttp/",
                     url = "https://square.github.io/okhttp/",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
                 ExternalLinkText(
                     text = "https://github.com/square/okhttp/blob/master/LICENSE.txt",
                     url = "https://github.com/square/okhttp/blob/master/LICENSE.txt",
-                    onClick = { openExternalUrl(context, uriHandler, it) }
+                    onClick = { openExternalUrl( uriHandler, it) }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text("Thanks to the authors!", style = MaterialTheme.typography.bodyMedium)
@@ -210,21 +206,12 @@ private fun ExternalLinkText(
 }
 
 private fun openExternalUrl(
-    context: Context,
     uriHandler: androidx.compose.ui.platform.UriHandler,
     url: String
 ) {
-    val opened = runCatching {
+    runCatching {
         uriHandler.openUri(url)
     }.isSuccess
-    if (opened) return
-
-    runCatching {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        context.startActivity(intent)
-    }
 }
 
 private const val NYSL_LICENSE_TEXT = """
