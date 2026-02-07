@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        ContextModel.initialize(this)
 
         initialText = if (savedInstanceState == null) {
             getWordFromIntent(intent)

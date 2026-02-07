@@ -16,6 +16,7 @@ class DictionaryRepository : KoinComponent {
     private val mDice = DiceFactory.getInstance()
     private val fileSystem = FileSystem.SYSTEM
     private val preferenceRepository: PreferenceRepository by inject()
+    private val contextModel: ContextModel by inject()
 
     private suspend fun createIndex(dicname: String, english: Boolean, defname: String): Boolean {
         return withContext(Dispatchers.IO) {
@@ -29,7 +30,7 @@ class DictionaryRepository : KoinComponent {
 
                 // インデクス作成
                 if (!dicinfo.readIndexBlock(object : IIndexCacheFile {
-                        private val file = ContextModel.cacheDir / cachename
+                        private val file = contextModel.cacheDir / cachename
 
                         override fun getInput() = fileSystem.source(file).buffer()
 
@@ -130,7 +131,7 @@ class DictionaryRepository : KoinComponent {
 
     private fun indexCacheFilename(name: String): Path {
         val cacheName = name.replace('/', '.').replace('\\', '.') + ".idx"
-        return ContextModel.cacheDir / cacheName
+        return contextModel.cacheDir / cacheName
     }
 
     fun indexCacheAccessor(name: String): IIndexCacheFile {
@@ -154,10 +155,10 @@ class DictionaryRepository : KoinComponent {
         val dotIndex = filename.lastIndexOf('.')
         val base = if (dotIndex > 0) filename.substring(0, dotIndex) else filename
         val ext = if (dotIndex > 0) filename.substring(dotIndex) else ""
-        var candidate = ContextModel.filesDir / filename
+        var candidate = contextModel.filesDir / filename
         var index = 1
         while (fileSystem.metadataOrNull(candidate) != null) {
-            candidate = ContextModel.filesDir / "$base($index)$ext"
+            candidate = contextModel.filesDir / "$base($index)$ext"
             index++
         }
         return candidate

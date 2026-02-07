@@ -14,17 +14,22 @@ import androidx.preference.PreferenceManager
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlin.getValue
 
-class PreferenceRepositoryAndroidImpl(private val context: Context) : PreferenceRepository{
+class PreferenceRepositoryAndroidImpl(private val context: Context) : PreferenceRepository,
+    KoinComponent {
 
     private val sp = PreferenceManager.getDefaultSharedPreferences(context)
+    private val contextModel: ContextModel by inject()
 
-    override fun dictionaryPreferenceName(name:String) = name.replace("/","_")
-    private fun dictionaryPreference(name:String) = context.getSharedPreferences(dictionaryPreferenceName(name), Context.MODE_PRIVATE)
+    override fun dictionaryPreferenceName(name: String) = name.replace("/", "_")
+    private fun dictionaryPreference(name: String) =
+        context.getSharedPreferences(dictionaryPreferenceName(name), Context.MODE_PRIVATE)
 
 
-    override fun readDictionarySettings(name:String) : DictionarySettings
-    {
+    override fun readDictionarySettings(name: String): DictionarySettings {
         val dicsp = dictionaryPreference(name)
 
         return DictionarySettings(
@@ -35,13 +40,13 @@ class PreferenceRepositoryAndroidImpl(private val context: Context) : Preference
         )
     }
 
-    override fun setDefaultSettings(name : String, defname: String, english: Boolean) {
+    override fun setDefaultSettings(name: String, defname: String, english: Boolean) {
 
         val dicsp = dictionaryPreference(name)
 
         // 名称未設定の時はデフォルトに戻す
         if (dicsp.getString(KEY_DICNAME, "")!!.isEmpty()) {
-            dicsp.edit().apply{
+            dicsp.edit().apply {
                 putString(KEY_DICNAME, defname)
                 putBoolean(KEY_ENGLISH, english)
                 putBoolean(KEY_USE, true)
@@ -88,7 +93,7 @@ class PreferenceRepositoryAndroidImpl(private val context: Context) : Preference
         sp.edit().putString(KEY_DICS, dics.toString()).apply()
     }
 
-    override fun getDicName(name:String): String? {
+    override fun getDicName(name: String): String? {
         val dicsp = dictionaryPreference(name)
         return dicsp.getString(KEY_DICNAME, name)
     }
@@ -104,7 +109,7 @@ class PreferenceRepositoryAndroidImpl(private val context: Context) : Preference
         }
     }
 
-    override fun removeDic(name : String){
+    override fun removeDic(name: String) {
         val dicsp = dictionaryPreference(name)
         dicsp.edit().clear().apply()
     }
@@ -116,9 +121,9 @@ class PreferenceRepositoryAndroidImpl(private val context: Context) : Preference
     }
 
     override fun isVersionUp(): Boolean {
-        val lastVersion= sp.getInt(KEY_LASTVERSION, 0)
-        val versioncode= ContextModel.versionCode
-        if ( lastVersion == 0 ){
+        val lastVersion = sp.getInt(KEY_LASTVERSION, 0)
+        val versioncode = contextModel.versionCode
+        if (lastVersion == 0) {
             sp.edit()
                 .putBoolean(KEY_NORMALIZE_SEARCH, true)
                 .apply()

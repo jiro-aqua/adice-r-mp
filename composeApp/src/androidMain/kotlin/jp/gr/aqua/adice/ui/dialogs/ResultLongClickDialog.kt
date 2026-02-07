@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import jp.gr.aqua.adice.model.ContextModel
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun ResultLongClickDialog(
@@ -21,6 +22,7 @@ fun ResultLongClickDialog(
     allText: String,
     onDismiss: () -> Unit
 ) {
+    val contextModel = koinInject<ContextModel>()
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
@@ -50,7 +52,7 @@ fun ResultLongClickDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            ContextModel.copyToClip(title)
+                            contextModel.copyToClip(title)
                             onDismiss()
                         }
                         .padding(vertical = 12.dp)
@@ -62,7 +64,7 @@ fun ResultLongClickDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            ContextModel.copyToClip(allText)
+                            contextModel.copyToClip(allText)
                             onDismiss()
                         }
                         .padding(vertical = 12.dp)

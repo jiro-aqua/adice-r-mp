@@ -11,11 +11,15 @@ import okio.Path.Companion.toPath
 import okio.buffer
 import okio.openZip
 import okio.source
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlin.getValue
 
-class DownloadRepository {
+class DownloadRepository : KoinComponent {
     private val fileSystem = FileSystem.SYSTEM
+    private val contextModel: ContextModel by inject()
 
-    private val STORAGE: Path by lazy { ContextModel.filesDir }
+    private val STORAGE: Path by lazy { contextModel.filesDir }
 
     private fun getName(path: String): String {
         val patharr = path.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()

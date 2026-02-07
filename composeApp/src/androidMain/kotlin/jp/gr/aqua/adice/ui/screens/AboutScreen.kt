@@ -35,12 +35,14 @@ import androidx.compose.ui.unit.dp
 import jp.gr.aqua.adice.model.ContextModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
     onNavigateBack: () -> Unit
 ) {
+    val contextModel = koinInject<ContextModel>()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -78,7 +80,7 @@ fun AboutScreen(
             }
             item {
                 Text(
-                    text = "Ver. ${ContextModel.versionName} (${ContextModel.versionCode})",
+                    text = "Ver. ${contextModel.versionName} (${contextModel.versionCode})",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

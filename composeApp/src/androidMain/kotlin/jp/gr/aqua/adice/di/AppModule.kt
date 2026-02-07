@@ -1,6 +1,8 @@
 package jp.gr.aqua.adice.di
 
 import jp.gr.aqua.adice.AdiceApplication
+import jp.gr.aqua.adice.model.ContextModel
+import jp.gr.aqua.adice.model.ContextModelAndroidImpl
 import jp.gr.aqua.adice.model.DictionaryRepository
 import jp.gr.aqua.adice.model.DownloadRepository
 import jp.gr.aqua.adice.model.PreferenceRepository
@@ -17,6 +19,7 @@ val appModule = module {
     single { DownloadRepository() }
     single { DictionaryRepository() }
     single<PreferenceRepository> { PreferenceRepositoryAndroidImpl(AdiceApplication.appContext) }
+    single<ContextModel> { ContextModelAndroidImpl(AdiceApplication.appContext) }
 
     viewModel { AdiceViewModel(get()) }
     viewModel { PreferencesGeneralViewModel(get(), get()) }

@@ -33,6 +33,7 @@ class SearchRepository : KoinComponent {
     private var transTextSize: Int = 0
 
     private val preferenceRepository: PreferenceRepository by inject()
+    private val contextModel: ContextModel by inject()
 
     fun initialize() {
         loadResources()
@@ -262,8 +263,8 @@ class SearchRepository : KoinComponent {
                     result.add(data)
                 }
                 DISP_MODE_START -> {
-                    val versionName = ContextModel.versionName
-                    val versionCode = ContextModel.versionCode
+                    val versionName = contextModel.versionName
+                    val versionCode = contextModel.versionCode
                     val version = "Ver. " + String.format("%s (%d)", versionName, versionCode)
                     val title = runBlocking { getString(Res.string.start_title) }
                     val footer = runBlocking { getString(Res.string.start_footer) }
