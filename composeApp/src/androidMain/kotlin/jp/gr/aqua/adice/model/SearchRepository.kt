@@ -1,6 +1,5 @@
 package jp.gr.aqua.adice.model
 
-import android.util.Log
 import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.description
 import adicermp.composeapp.generated.resources.resulttitlehtml
@@ -36,7 +35,7 @@ class SearchRepository {
         loadResources()
         loadIrreg()
         initDice()
-        Log.i(TAG, "aDice Initialized")
+        println("$TAG: aDice Initialized")
         mInitialized = true
     }
 
@@ -126,7 +125,7 @@ class SearchRepository {
             }
             val dicinfo = mDice.open(name)
             if (dicinfo != null) {
-                Log.i(TAG, "Open OK:$name")
+                println("$TAG: Open OK:$name")
 
                 // インデクス作成
                 if (!dicinfo.readIndexBlock(DictionaryRepository().indexCacheAccessor(name))) {
@@ -135,7 +134,7 @@ class SearchRepository {
                     applyDictionarySettings(dicinfo, PreferenceRepository().readDictionarySettings(name))
                 }
             } else {
-                Log.i(TAG, "Open NG:$name")
+                println("$TAG: Open NG:$name")
             }
         }
     }
@@ -164,7 +163,7 @@ class SearchRepository {
                 irreg[s[0]] = s[1]
             }
         }
-        Log.i(TAG, "Open OK:$name")
+        println("$TAG: Open OK:$name")
         mDice.setIrreg(irreg)
     }
 
