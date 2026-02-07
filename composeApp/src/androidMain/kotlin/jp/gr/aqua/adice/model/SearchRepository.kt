@@ -1,7 +1,6 @@
 package jp.gr.aqua.adice.model
 
 import android.util.Log
-import android.content.res.Configuration
 import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.description
 import adicermp.composeapp.generated.resources.resulttitlehtml
@@ -39,6 +38,15 @@ class SearchRepository {
         initDice()
         Log.i(TAG, "aDice Initialized")
         mInitialized = true
+    }
+
+    fun updateScreenSize(isLargeScreen: Boolean) {
+        val transTextSizeRes: StringResource = if (isLargeScreen) {
+            Res.string.trans_text_size_large
+        } else {
+            Res.string.trans_text_size
+        }
+        transTextSize = runBlocking { getString(transTextSizeRes) }.toIntOrNull() ?: 16
     }
 
     suspend fun startPage(): List<ResultModel> {
@@ -279,13 +287,7 @@ class SearchRepository {
     private fun loadResources() {
         mFooter = runBlocking { getString(Res.string.resulttitlehtml) }
         mDescription = runBlocking { getString(Res.string.description) }
-        val screenLayout = ContextModel.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-        val transTextSizeRes: StringResource = if (screenLayout >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            Res.string.trans_text_size_large
-        } else {
-            Res.string.trans_text_size
-        }
-        transTextSize = runBlocking { getString(transTextSizeRes) }.toIntOrNull() ?: 16
+        transTextSize = runBlocking { getString(Res.string.trans_text_size) }.toIntOrNull() ?: 16
     }
 
     companion object {

@@ -3,6 +3,7 @@ package jp.gr.aqua.adice.ui.screens
 import android.app.Activity
 import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.app_name
@@ -53,6 +55,12 @@ fun MainScreen(
     onNavigateToResultLongClickDialog: (String, String) -> Unit,
     onLinkClicked: (String) -> Unit = {}
 ) {
+    BoxWithConstraints {
+        val isLargeScreen = maxWidth >= 600.dp
+        LaunchedEffect(isLargeScreen) {
+            viewModel.updateScreenSize(isLargeScreen)
+        }
+
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val focusRequester = remember { FocusRequester() }
@@ -206,5 +214,6 @@ fun MainScreen(
                 onMoreClick = { position -> viewModel.more(position) }
             )
         }
+    }
     }
 }

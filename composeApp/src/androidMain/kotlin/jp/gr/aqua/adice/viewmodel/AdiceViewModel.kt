@@ -79,6 +79,12 @@ class AdiceViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(loseFocus = false)
     }
 
+    fun updateScreenSize(isLargeScreen: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            searchRepository.updateScreenSize(isLargeScreen)
+        }
+    }
+
     fun onResume() = searchRepository.applySettings()
     fun pushHistory() = searchRepository.pushHistory()
     fun popHistory(): CharSequence? = searchRepository.popHistory()
