@@ -1,10 +1,9 @@
 package jp.gr.aqua.adice.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import jp.gr.aqua.adice.model.DictionaryRepository
 
-class PreferencesDictionaryViewModel(application: Application): AndroidViewModel(application)
+class PreferencesDictionaryViewModel : ViewModel()
 {
     private val dictionaryRepository = DictionaryRepository()
 

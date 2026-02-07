@@ -1,7 +1,6 @@
 package jp.gr.aqua.adice.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.gr.aqua.adice.model.ResultModel
 import jp.gr.aqua.adice.model.SearchRepository
@@ -11,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AdiceViewModel(application: Application) : AndroidViewModel(application) {
+class AdiceViewModel : ViewModel() {
     private val searchRepository = SearchRepository()
 
     data class MainUiState(

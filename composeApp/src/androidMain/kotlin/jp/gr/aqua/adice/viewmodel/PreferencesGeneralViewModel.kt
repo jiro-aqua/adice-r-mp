@@ -1,8 +1,7 @@
 package jp.gr.aqua.adice.viewmodel
 
-import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.gr.aqua.adice.model.DictionaryRepository
 import jp.gr.aqua.adice.model.DownloadRepository
@@ -12,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PreferencesGeneralViewModel(application: Application) : AndroidViewModel(application) {
+class PreferencesGeneralViewModel : ViewModel() {
     private val downloadRepository = DownloadRepository()
     private val dictionaryRepository = DictionaryRepository()
 
