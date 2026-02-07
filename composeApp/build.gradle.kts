@@ -24,8 +24,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.preference.ktx)
-            implementation(libs.koin.android)
-            implementation(libs.koin.android.compose)
         }
         androidUnitTest.dependencies {
             implementation(libs.icu4j)
@@ -49,6 +47,10 @@ kotlin {
             //okio/okhttp
             implementation(libs.okhttp)
             implementation(libs.okio)
+
+            // koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
 
             // kotlin serialization
             implementation(libs.kotlinx.serialization.core)

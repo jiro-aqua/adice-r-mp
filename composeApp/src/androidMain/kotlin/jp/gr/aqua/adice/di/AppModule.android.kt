@@ -12,9 +12,10 @@ import jp.gr.aqua.adice.viewmodel.AdiceViewModel
 import jp.gr.aqua.adice.viewmodel.PreferencesDictionaryViewModel
 import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val appModule = module {
+actual val appModule : Module = module {
     single { SearchRepository() }
     single { DownloadRepository() }
     single { DictionaryRepository() }
@@ -24,4 +25,8 @@ val appModule = module {
     viewModel { AdiceViewModel(get()) }
     viewModel { PreferencesGeneralViewModel(get(), get()) }
     viewModel { PreferencesDictionaryViewModel(get()) }
+}
+
+val commonModule : Module = module {
+
 }
