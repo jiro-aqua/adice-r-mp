@@ -50,6 +50,7 @@ kotlin {
 
             // koin
             implementation(libs.koin.core)
+            implementation(libs.koin.core.viewmodel)
             implementation(libs.koin.compose)
 
             // kotlin serialization

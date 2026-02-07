@@ -3,30 +3,12 @@ package jp.gr.aqua.adice.di
 import jp.gr.aqua.adice.AdiceApplication
 import jp.gr.aqua.adice.model.ContextModel
 import jp.gr.aqua.adice.model.ContextModelAndroidImpl
-import jp.gr.aqua.adice.model.DictionaryRepository
-import jp.gr.aqua.adice.model.DownloadRepository
 import jp.gr.aqua.adice.model.PreferenceRepository
 import jp.gr.aqua.adice.model.PreferenceRepositoryAndroidImpl
-import jp.gr.aqua.adice.model.SearchRepository
-import jp.gr.aqua.adice.viewmodel.AdiceViewModel
-import jp.gr.aqua.adice.viewmodel.PreferencesDictionaryViewModel
-import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val appModule : Module = module {
-    single { SearchRepository() }
-    single { DownloadRepository() }
-    single { DictionaryRepository() }
     single<PreferenceRepository> { PreferenceRepositoryAndroidImpl(AdiceApplication.appContext) }
     single<ContextModel> { ContextModelAndroidImpl(AdiceApplication.appContext) }
-
-    viewModel { AdiceViewModel(get()) }
-    viewModel { PreferencesGeneralViewModel(get(), get()) }
-    viewModel { PreferencesDictionaryViewModel(get()) }
-}
-
-val commonModule : Module = module {
-
 }
