@@ -1,7 +1,5 @@
 package jp.gr.aqua.adice.model
 
-import android.net.Uri
-import android.provider.OpenableColumns
 import jp.sblo.pandora.dice.DiceFactory
 import jp.sblo.pandora.dice.IIndexCacheFile
 import jp.sblo.pandora.dice.IdicInfo
@@ -11,18 +9,16 @@ import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
 import okio.buffer
-import okio.source
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class DictionaryRepository : KoinComponent{
+class DictionaryRepository : KoinComponent {
     private val mDice = DiceFactory.getInstance()
     private val fileSystem = FileSystem.SYSTEM
     private val preferenceRepository: PreferenceRepository by inject()
 
-    private suspend fun createIndex(dicname: String, english: Boolean, defname: String) : Boolean
-    {
-        return withContext(Dispatchers.IO){
+    private suspend fun createIndex(dicname: String, english: Boolean, defname: String): Boolean {
+        return withContext(Dispatchers.IO) {
             // 辞書追加
             var failed = true
             val dicinfo = mDice.open(dicname)
@@ -33,12 +29,12 @@ class DictionaryRepository : KoinComponent{
 
                 // インデクス作成
                 if (!dicinfo.readIndexBlock(object : IIndexCacheFile {
-                            private val file = ContextModel.cacheDir / cachename
+                        private val file = ContextModel.cacheDir / cachename
 
-                            override fun getInput() = fileSystem.source(file).buffer()
+                        override fun getInput() = fileSystem.source(file).buffer()
 
-                            override fun getOutput() = fileSystem.sink(file).buffer()
-                        })) {
+                        override fun getOutput() = fileSystem.sink(file).buffer()
+                    })) {
                     mDice.close(dicinfo)
                 } else {
                     failed = false
@@ -49,36 +45,49 @@ class DictionaryRepository : KoinComponent{
         }
     }
 
+    suspend fun importDictionary(file: PickedFileHandle): DictionaryImportResult {
+        return withContext(Dispatchers.IO) {
+            val rawName = file.displayName.trim()
+            if (rawName.isEmpty()) {
+                return@withContext DictionaryImportResult(
+                    success = false,
+                    dicName = "",
+                    error = DictionaryImportError.EmptyDisplayName
+                )
+            }
 
-    suspend fun openDictionary(uri : Uri) : Pair<Boolean,String>
-    {
-        return withContext(Dispatchers.IO){
-            val cr = ContextModel.contentResolver
-            val cursor = cr.query(uri, null, null, null, null, null)
-            var displayName = ""
+            val safeName = sanitizeFilename(rawName)
+            val destination = uniqueDestinationPath(safeName)
+
             try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                }
-                cursor!!.close()
-
-                val dicFile = ContextModel.filesDir / displayName
-                cr.openInputStream(uri)?.use { input ->
-                    fileSystem.sink(dicFile).buffer().use { sink ->
-                        sink.writeAll(input.source())
+                file.openSource().use { source ->
+                    fileSystem.sink(destination).buffer().use { sink ->
+                        sink.writeAll(source)
                     }
                 }
-                cursor.close()
-                addDictionary(dicFile.toString(), false, dicFile.nameWithoutExtension())
             } catch (e: Throwable) {
                 e.printStackTrace()
-                false to ""
+                return@withContext DictionaryImportResult(
+                    success = false,
+                    dicName = safeName,
+                    error = DictionaryImportError.ReadFailed
+                )
+            }
+
+            val addResult = addDictionary(destination.toString(), false, destination.nameWithoutExtension())
+            if (addResult.first) {
+                DictionaryImportResult(success = true, dicName = addResult.second)
+            } else {
+                DictionaryImportResult(
+                    success = false,
+                    dicName = addResult.second,
+                    error = DictionaryImportError.InvalidDictionary
+                )
             }
         }
     }
 
-    suspend fun addDictionary(dicname: String?, english: Boolean, defname: String) : Pair<Boolean,String>
-    {
+    suspend fun addDictionary(dicname: String?, english: Boolean, defname: String): Pair<Boolean, String> {
         if (dicname != null) {
             val result = createIndex(dicname, english, defname)
             if (result) {
@@ -91,18 +100,19 @@ class DictionaryRepository : KoinComponent{
     }
 
     private fun writeDictionary() {
-        val dics = List<String>(mDice.dicNum) { mDice.getDicInfo(it).GetFilename() }
+        val dics = List(mDice.dicNum) { mDice.getDicInfo(it).GetFilename() }
         preferenceRepository.writeDics(dics)
     }
-    fun swap(name : String , up : Boolean) {
-        val dir = if ( up ) -1 else 1
+
+    fun swap(name: String, up: Boolean) {
+        val dir = if (up) -1 else 1
         mDice.swap(mDice.getDicInfo(name), dir)
         writeDictionary()
     }
 
-    private fun close(name : String ) = mDice.close(mDice.getDicInfo(name))
+    private fun close(name: String) = mDice.close(mDice.getDicInfo(name))
 
-    fun remove( name : String ){
+    fun remove(name: String) {
         // 該当する辞書を閉じる
         close(name)
         // 一覧を更新
@@ -116,14 +126,14 @@ class DictionaryRepository : KoinComponent{
     }
 
     // 辞書一覧取得
-    fun getDicList()  = List<IdicInfo>(mDice.dicNum) { mDice.getDicInfo(it) }
+    fun getDicList(): List<IdicInfo> = List(mDice.dicNum) { mDice.getDicInfo(it) }
 
-    private fun indexCacheFilename(name:String): Path {
+    private fun indexCacheFilename(name: String): Path {
         val cacheName = name.replace('/', '.').replace('\\', '.') + ".idx"
         return ContextModel.cacheDir / cacheName
     }
 
-    fun indexCacheAccessor(name : String) : IIndexCacheFile {
+    fun indexCacheAccessor(name: String): IIndexCacheFile {
         return object : IIndexCacheFile {
             private val file = indexCacheFilename(name)
 
@@ -133,6 +143,26 @@ class DictionaryRepository : KoinComponent{
         }
     }
 
+    private fun sanitizeFilename(filename: String): String {
+        return filename
+            .substringAfterLast('/')
+            .substringAfterLast('\\')
+            .ifEmpty { "dictionary.dic" }
+    }
+
+    private fun uniqueDestinationPath(filename: String): Path {
+        val dotIndex = filename.lastIndexOf('.')
+        val base = if (dotIndex > 0) filename.substring(0, dotIndex) else filename
+        val ext = if (dotIndex > 0) filename.substring(dotIndex) else ""
+        var candidate = ContextModel.filesDir / filename
+        var index = 1
+        while (fileSystem.metadataOrNull(candidate) != null) {
+            candidate = ContextModel.filesDir / "$base($index)$ext"
+            index++
+        }
+        return candidate
+    }
+
     private fun Path.nameWithoutExtension(): String {
         val filename = name
         val dot = filename.lastIndexOf('.')
@@ -140,5 +170,4 @@ class DictionaryRepository : KoinComponent{
     }
 
     private fun String.toSystemPath(): Path = replace('\\', '/').toPath()
-
 }

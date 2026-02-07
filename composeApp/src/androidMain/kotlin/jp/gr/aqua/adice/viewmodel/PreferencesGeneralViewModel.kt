@@ -1,10 +1,11 @@
 package jp.gr.aqua.adice.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import jp.gr.aqua.adice.model.DictionaryImportError
 import jp.gr.aqua.adice.model.DictionaryRepository
 import jp.gr.aqua.adice.model.DownloadRepository
+import jp.gr.aqua.adice.model.PickedFileHandle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,8 @@ class PreferencesGeneralViewModel(
 
     data class CompletionResult(
         val success: Boolean,
-        val dicName: String
+        val dicName: String,
+        val error: DictionaryImportError? = null
     )
 
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -41,13 +43,13 @@ class PreferencesGeneralViewModel(
         }
     }
 
-    fun openDictionary(uri: Uri) {
+    fun importDictionary(file: PickedFileHandle) {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = _uiState.value.copy(isDownloading = true)
-            val result = dictionaryRepository.openDictionary(uri)
+            val result = dictionaryRepository.importDictionary(file)
             _uiState.value = _uiState.value.copy(
                 isDownloading = false,
-                completionResult = CompletionResult(result.first, result.second)
+                completionResult = CompletionResult(result.success, result.dicName, result.error)
             )
         }
     }

@@ -1,8 +1,5 @@
 package jp.gr.aqua.adice.ui.screens
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -51,6 +48,7 @@ import adicermp.composeapp.generated.resources.toastadded
 import adicermp.composeapp.generated.resources.toasterror
 import jp.gr.aqua.adice.model.DictionaryRepository
 import jp.gr.aqua.adice.model.PreferenceRepository
+import jp.gr.aqua.adice.model.rememberAndroidDictionaryFilePickerPort
 import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
 import jp.sblo.pandora.dice.IdicInfo
 import org.jetbrains.compose.resources.stringResource
@@ -89,10 +87,8 @@ fun SettingsScreen(
         refreshDicList()
     }
 
-    val openDocumentLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri: Uri? ->
-        uri?.let { viewModel.openDictionary(it) }
+    val dictionaryFilePicker = rememberAndroidDictionaryFilePickerPort { file ->
+        viewModel.importDictionary(file)
     }
 
     // Handle download now
@@ -157,7 +153,7 @@ fun SettingsScreen(
                 item {
                     SettingsClickableItem(
                         title = stringResource(Res.string.adddictionarytitle),
-                        onClick = { openDocumentLauncher.launch(arrayOf("*/*")) }
+                        onClick = { dictionaryFilePicker.launch() }
                     )
                 }
 
