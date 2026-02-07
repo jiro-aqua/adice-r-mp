@@ -1,7 +1,5 @@
 package jp.gr.aqua.adice.model
 
-import android.graphics.Typeface
-
 data class ResultModel(
         val mode: Mode,
         val dic: Int,
@@ -9,11 +7,6 @@ data class ResultModel(
         val phone: CharSequence? = null,
         val trans: CharSequence? = null,
         val sample: CharSequence? = null,
-
-        val indexFont: Typeface? = null,
-        val phoneFont: Typeface? = null,
-        val transFont: Typeface? = null,
-        val sampleFont: Typeface? = null,
         val indexSize: Int = 0,
         val phoneSize: Int = 0,
         val transSize: Int = 0,

@@ -1,6 +1,5 @@
 package jp.gr.aqua.adice.model
 
-import android.graphics.Typeface
 import android.util.Log
 import android.content.res.Configuration
 import adicermp.composeapp.generated.resources.Res
@@ -30,8 +29,6 @@ class SearchRepository {
     private var mLast: String? = ""
 
     private val mSearchHistory: ArrayList<CharSequence> = ArrayList()
-
-    private lateinit var phoneticFont: Typeface
     private lateinit var mFooter: String
     private lateinit var mDescription: String
     private var transTextSize: Int = 0
@@ -214,11 +211,6 @@ class SearchRepository {
                                 phoneSize = info.GetPhoneticSize(),
                                 transSize = transTextSize,
                                 sampleSize = info.GetSampleSize(),
-
-                                indexFont = null,
-                                phoneFont = phoneticFont,
-                                transFont = null,
-                                sampleFont = null
                                 )
 
                         if (pos == -1) {
@@ -287,7 +279,6 @@ class SearchRepository {
     private fun loadResources() {
         mFooter = runBlocking { getString(Res.string.resulttitlehtml) }
         mDescription = runBlocking { getString(Res.string.description) }
-        phoneticFont = Typeface.createFromAsset(ContextModel.assets, "DoulosSILR.ttf")
         val screenLayout = ContextModel.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
         val transTextSizeRes: StringResource = if (screenLayout >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
             Res.string.trans_text_size_large

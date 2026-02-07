@@ -1,6 +1,7 @@
 package jp.gr.aqua.adice.ui.components
 
 import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.doulos_silr
 import adicermp.composeapp.generated.resources.morebtn
 import adicermp.composeapp.generated.resources.noresulthtml
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -21,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import jp.gr.aqua.adice.model.ResultModel
+import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -59,7 +62,8 @@ fun WordResultItem(
                 Text(
                     text = phone.toString(),
                     color = Color.Black,
-                    fontSize = result.phoneSize.sp
+                    fontSize = result.phoneSize.sp,
+                    fontFamily = FontFamily(Font(Res.font.doulos_silr))
                 )
             }
         }
