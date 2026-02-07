@@ -36,6 +36,8 @@
     <string name="menu_copy_index">Copy index</string>
     <string name="menu_copy_all">Copy all</string>
     <string name="menu_share">Share</string>
+    <string name="start_title">aDice Revised</string>
+    <string name="start_footer">Copyright (C) 2020-, Aquamarine Networks.\nhttp://pandora.sblo.jp/</string>
     <string name="normalize_word">Normalization of search word</string>
     <string name="trans_text_size">16</string>
     <string name="trans_text_size_large">18</string>

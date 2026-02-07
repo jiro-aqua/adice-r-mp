@@ -1,12 +1,13 @@
 package jp.gr.aqua.adice.model
 
 import android.graphics.Typeface
-import android.text.Html
 import android.util.Log
 import android.content.res.Configuration
 import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.description
 import adicermp.composeapp.generated.resources.resulttitlehtml
+import adicermp.composeapp.generated.resources.start_footer
+import adicermp.composeapp.generated.resources.start_title
 import adicermp.composeapp.generated.resources.trans_text_size
 import adicermp.composeapp.generated.resources.trans_text_size_large
 import jp.gr.aqua.adice.BuildConfig
@@ -31,7 +32,6 @@ class SearchRepository {
     private val mSearchHistory: ArrayList<CharSequence> = ArrayList()
 
     private lateinit var phoneticFont: Typeface
-    private lateinit var mStartPage: String
     private lateinit var mFooter: String
     private lateinit var mDescription: String
     private var transTextSize: Int = 0
@@ -262,13 +262,20 @@ class SearchRepository {
                     val versionName = BuildConfig.VERSION_NAME
                     val versionCode = BuildConfig.VERSION_CODE
                     val version = "Ver. " + String.format("%s (%d)", versionName, versionCode)
-                    val description = mDescription
-
-                    @Suppress("DEPRECATION")
-                    val index = Html.fromHtml(mStartPage.replace("\$version$", version).replace("\$description$", description))
-                    val data = ResultModel(mode=ResultModel.Mode.NONE, dic=0,
-                            index = index,
-                            indexSize = 16)
+                    val title = runBlocking { getString(Res.string.start_title) }
+                    val footer = runBlocking { getString(Res.string.start_footer) }
+                    val data = ResultModel(
+                        mode = ResultModel.Mode.NONE,
+                        dic = 0,
+                        index = title,
+                        phone = version,
+                        trans = mDescription,
+                        sample = footer,
+                        indexSize = 36,
+                        phoneSize = 16,
+                        transSize = 16,
+                        sampleSize = 14
+                    )
                     result.add(data)
                 }
             }
@@ -279,7 +286,6 @@ class SearchRepository {
     private fun loadResources() {
         mFooter = runBlocking { getString(Res.string.resulttitlehtml) }
         mDescription = runBlocking { getString(Res.string.description) }
-        mStartPage = ContextModel.assets.open("start.html").bufferedReader(charset = Charsets.UTF_8).readText()
         phoneticFont = Typeface.createFromAsset(ContextModel.assets, "DoulosSILR.ttf")
         val screenLayout = ContextModel.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
         val transTextSizeRes: StringResource = if (screenLayout >= Configuration.SCREENLAYOUT_SIZE_LARGE) {

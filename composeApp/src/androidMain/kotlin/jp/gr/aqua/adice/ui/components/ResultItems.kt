@@ -1,5 +1,8 @@
 package jp.gr.aqua.adice.ui.components
 
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.morebtn
+import adicermp.composeapp.generated.resources.noresulthtml
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,9 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import adicermp.composeapp.generated.resources.Res
-import adicermp.composeapp.generated.resources.morebtn
-import adicermp.composeapp.generated.resources.noresulthtml
 import jp.gr.aqua.adice.model.ResultModel
 import org.jetbrains.compose.resources.stringResource
 
@@ -112,14 +112,45 @@ fun MoreResultItem(onClick: () -> Unit) {
 
 @Composable
 fun NoneResultItem(result: ResultModel) {
-    result.index?.let { index ->
-        if (index.isNotEmpty()) {
-            Text(
-                text = index.toString(),
-                color = Color.Black,
-                fontSize = result.indexSize.sp,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
+    Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)) {
+        result.index?.let { title ->
+            if (title.isNotEmpty()) {
+                Text(
+                    text = title.toString(),
+                    color = Color.Black,
+                    fontSize = result.indexSize.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+        }
+        result.phone?.let { version ->
+            if (version.isNotEmpty()) {
+                Text(
+                    text = version.toString(),
+                    color = Color.Black,
+                    fontSize = result.phoneSize.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+        }
+        result.trans?.let { description ->
+            if (description.isNotEmpty()) {
+                Text(
+                    text = description.toString(),
+                    color = Color.Black,
+                    fontSize = result.transSize.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+        }
+        result.sample?.let { footer ->
+            if (footer.isNotEmpty()) {
+                Text(
+                    text = footer.toString(),
+                    color = Color.Black,
+                    fontSize = result.sampleSize.sp
+                )
+            }
         }
     }
 }
