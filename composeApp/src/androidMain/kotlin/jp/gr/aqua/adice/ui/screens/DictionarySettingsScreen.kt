@@ -1,6 +1,5 @@
 package jp.gr.aqua.adice.ui.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +18,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,7 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import adicermp.composeapp.generated.resources.Res
 import adicermp.composeapp.generated.resources.dictionarymanagementtitle
@@ -61,9 +62,9 @@ fun DictionarySettingsScreen(
     index: Int,
     onNavigateBack: () -> Unit
 ) {
-    val context = LocalContext.current
     val preferenceRepository = remember { PreferenceRepository() }
     val dictionaryRepository = remember { DictionaryRepository() }
+    val snackbarHostState = remember { SnackbarHostState() }
     val dicListSize = remember { dictionaryRepository.getDicList().size }
     val toastRemovedMessage = stringResource(Res.string.toastremoved, filename)
 
@@ -73,6 +74,7 @@ fun DictionarySettingsScreen(
     var resultNum by remember { mutableIntStateOf(30) }
     var showResultNumDialog by remember { mutableStateOf(false) }
     var showRemoveDialog by remember { mutableStateOf(false) }
+    var removedSnackbarMessage by remember { mutableStateOf<String?>(null) }
 
     // Load settings
     LaunchedEffect(filename) {
@@ -96,7 +98,19 @@ fun DictionarySettingsScreen(
         )
     }
 
+    LaunchedEffect(removedSnackbarMessage) {
+        removedSnackbarMessage?.let { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Long
+            )
+            removedSnackbarMessage = null
+            onNavigateBack()
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(dicName.ifEmpty { filename }) },
@@ -245,13 +259,8 @@ fun DictionarySettingsScreen(
             confirmButton = {
                 TextButton(onClick = {
                     dictionaryRepository.remove(filename)
-                    Toast.makeText(
-                        context,
-                        toastRemovedMessage,
-                        Toast.LENGTH_LONG
-                    ).show()
                     showRemoveDialog = false
-                    onNavigateBack()
+                    removedSnackbarMessage = toastRemovedMessage
                 }) {
                     Text("OK")
                 }

@@ -19,10 +19,10 @@
     <string name="moveuptitle">Move Up</string>
     <string name="movedowntitle">Move Down</string>
     <string name="removedictionarytitle">Remove the dictionary from library</string>
-    <string name="toastadded">Added[%s]...</string>
-    <string name="toasterror">Could not load[%s]...</string>
-    <string name="toastremoved">Removed[%s]...</string>
-    <string name="resulttitlehtml">Result of %s</string>
+    <string name="toastadded">Added[%1$s]...</string>
+    <string name="toasterror">Could not load[%1$s]...</string>
+    <string name="toastremoved">Removed[%1$s]...</string>
+    <string name="resulttitlehtml">Result of %1$s</string>
     <string name="adddictionarytitle">Import PDIC/Unicode file</string>
     <string name="noresulthtml">No result.</string>
     <string name="morebtn">more</string>
@@ -47,10 +47,10 @@
     <string name="install_action">Install</string>
     <string name="download_process">In Processing...</string>
 
-    <string name="dicname_eijiro">Eijiro %s</string>
-    <string name="dicname_waeijiro">Waeiiro %s</string>
-    <string name="dicname_reijiro">Reijiro %s</string>
-    <string name="dicname_ryakujiro">Ryakugoro %s</string>
+    <string name="dicname_eijiro">Eijiro %1$s</string>
+    <string name="dicname_waeijiro">Waeiiro %1$s</string>
+    <string name="dicname_reijiro">Reijiro %1$s</string>
+    <string name="dicname_ryakujiro">Ryakugoro %1$s</string>
     <string name="dicname_pdej">PDEJ2005 English-Japanese Dictionary</string>
     <string name="dicname_edict">EDICT Japanese-English Dictionary</string>
     <string name="dicname_webster">Webster English Dictionary 1913</string>

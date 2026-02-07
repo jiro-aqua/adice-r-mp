@@ -19,10 +19,10 @@
     <string name="moveuptitle">上に移動</string>
     <string name="movedowntitle">下に移動</string>
     <string name="removedictionarytitle">辞書削除</string>
-    <string name="toastadded">[%s]を追加しました</string>
-    <string name="toasterror">[%s]を追加できません</string>
-    <string name="toastremoved">[%s]を削除しました</string>
-    <string name="resulttitlehtml">「%s」より</string>
+    <string name="toastadded">[%1$s]を追加しました</string>
+    <string name="toasterror">[%1$s]を追加できません</string>
+    <string name="toastremoved">[%1$s]を削除しました</string>
+    <string name="resulttitlehtml">「%1$s」より</string>
     <string name="adddictionarytitle">PDIC/Unicodeのファイルをインポートする</string>
     <string name="noresulthtml">一致するものはありませんでした。</string>
     <string name="morebtn">続きを読む</string>
@@ -47,10 +47,10 @@
     <string name="install_action">インストール</string>
     <string name="download_process">ダウンロード処理中</string>
 
-    <string name="dicname_eijiro">英辞郎 %s版</string>
-    <string name="dicname_waeijiro">和英辞郎 %s版</string>
-    <string name="dicname_reijiro">例辞郎 %s版</string>
-    <string name="dicname_ryakujiro">略語郎 %s版</string>
+    <string name="dicname_eijiro">英辞郎 %1$s版</string>
+    <string name="dicname_waeijiro">和英辞郎 %1$s版</string>
+    <string name="dicname_reijiro">例辞郎 %1$s版</string>
+    <string name="dicname_ryakujiro">略語郎 %1$s版</string>
     <string name="dicname_pdej">PDEJ2005英和辞書</string>
     <string name="dicname_edict">EDICT和英辞書</string>
     <string name="dicname_webster">Webster英英辞典1913年版</string>
