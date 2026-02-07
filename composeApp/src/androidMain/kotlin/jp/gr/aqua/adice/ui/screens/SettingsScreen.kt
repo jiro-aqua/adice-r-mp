@@ -64,7 +64,6 @@ fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToDictionarySettings: (String, Int) -> Unit,
     onNavigateToInstall: () -> Unit,
-    onDownloadUrl: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val preferenceRepository = remember { PreferenceRepository() }
