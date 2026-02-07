@@ -1,8 +1,13 @@
 package jp.gr.aqua.adice.ui.screens
 
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.description
+import adicermp.composeapp.generated.resources.help
+import adicermp.composeapp.generated.resources.icon_logo
+import adicermp.composeapp.generated.resources.manual
+import adicermp.composeapp.generated.resources.manual_url
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,21 +30,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import adicermp.composeapp.generated.resources.Res
-import adicermp.composeapp.generated.resources.description
-import adicermp.composeapp.generated.resources.help
-import adicermp.composeapp.generated.resources.manual
-import adicermp.composeapp.generated.resources.manual_url
 import jp.gr.aqua.adice.BuildConfig
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +59,6 @@ fun AboutScreen(
     ) { paddingValues ->
         val context = LocalContext.current
         val uriHandler = LocalUriHandler.current
-        val iconBitmap = rememberAssetBitmap("icon.png")
 
         LazyColumn(
             modifier = Modifier
@@ -72,14 +69,12 @@ fun AboutScreen(
         ) {
             item {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    iconBitmap?.let { bitmap ->
-                        Image(
-                            bitmap = bitmap,
-                            contentDescription = "aDice icon",
-                            modifier = Modifier.size(56.dp)
-                        )
-                        Spacer(modifier = Modifier.size(12.dp))
-                    }
+                    Image(
+                        painter = painterResource(Res.drawable.icon_logo),
+                        contentDescription = "aDice icon",
+                        modifier = Modifier.size(56.dp)
+                    )
+                    Spacer(modifier = Modifier.size(12.dp))
                     Text(
                         text = "aDice",
                         style = MaterialTheme.typography.headlineMedium
@@ -196,18 +191,6 @@ fun AboutScreen(
                 Text("Thanks to the authors!", style = MaterialTheme.typography.bodyMedium)
             }
         }
-    }
-}
-
-@Composable
-private fun rememberAssetBitmap(assetName: String): ImageBitmap? {
-    val context = LocalContext.current
-    return remember(context, assetName) {
-        runCatching {
-            context.assets.open(assetName).use { stream ->
-                BitmapFactory.decodeStream(stream)?.asImageBitmap()
-            }
-        }.getOrNull()
     }
 }
 
