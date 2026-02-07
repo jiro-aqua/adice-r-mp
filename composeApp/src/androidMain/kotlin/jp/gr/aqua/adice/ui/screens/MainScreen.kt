@@ -1,7 +1,9 @@
 package jp.gr.aqua.adice.ui.screens
 
-import android.app.Activity
-import android.os.Build
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.app_name
+import adicermp.composeapp.generated.resources.help
+import adicermp.composeapp.generated.resources.settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -28,12 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import adicermp.composeapp.generated.resources.Res
-import adicermp.composeapp.generated.resources.app_name
-import adicermp.composeapp.generated.resources.help
-import adicermp.composeapp.generated.resources.settings
 import jp.gr.aqua.adice.model.PreferenceRepository
 import jp.gr.aqua.adice.model.ResultModel
 import jp.gr.aqua.adice.ui.components.SearchResultList
@@ -53,7 +50,8 @@ fun MainScreen(
     onNavigateToWelcomeDialog: () -> Unit,
     onNavigateToResultClickDialog: (String, List<String>, List<String>) -> Unit,
     onNavigateToResultLongClickDialog: (String, String) -> Unit,
-    onLinkClicked: (String) -> Unit = {}
+    onLinkClicked: (String) -> Unit = {},
+    onMoveTaskToBack: () -> Unit,
 ) {
     BoxWithConstraints {
         val isLargeScreen = maxWidth >= 600.dp
@@ -66,7 +64,6 @@ fun MainScreen(
         val listState = rememberLazyListState()
         val focusRequester = remember { FocusRequester() }
         val coroutineScope = rememberCoroutineScope()
-        val context = LocalContext.current
         var showMenu by remember { mutableStateOf(false) }
 
         // Handle initial text from intent
@@ -126,11 +123,7 @@ fun MainScreen(
                 viewModel.updateSearchWord(cs.toString())
                 viewModel.search(cs.toString())
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    (context as? Activity)?.moveTaskToBack(false)
-                } else {
-                    (context as? Activity)?.finish()
-                }
+                onMoveTaskToBack()
             }
         }
 

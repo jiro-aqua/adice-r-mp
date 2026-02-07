@@ -43,7 +43,8 @@ sealed interface Screen : NavKey {
 fun AdiceNavHost(
     initialText: String = "",
     adiceViewModel: AdiceViewModel,
-    settingsViewModel: PreferencesGeneralViewModel
+    settingsViewModel: PreferencesGeneralViewModel,
+    onMoveTaskToBack: () -> Unit
 ) {
     val backStack = rememberNavBackStack(Screen.Main)
 
@@ -98,7 +99,8 @@ fun AdiceNavHost(
                         adiceViewModel.pushHistory()
                         adiceViewModel.updateSearchWord(link)
                         adiceViewModel.search(link)
-                    }
+                    },
+                    onMoveTaskToBack = onMoveTaskToBack,
                 )
 
                 // Dialogs shown over MainScreen

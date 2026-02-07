@@ -46,7 +46,8 @@ class MainActivity : ComponentActivity() {
                     AdiceNavHost(
                         initialText = initialText,
                         adiceViewModel = adiceViewModel,
-                        settingsViewModel = settingsViewModel
+                        settingsViewModel = settingsViewModel,
+                        onMoveTaskToBack = { moveTaskToBack(true) }
                     )
                 }
             }
