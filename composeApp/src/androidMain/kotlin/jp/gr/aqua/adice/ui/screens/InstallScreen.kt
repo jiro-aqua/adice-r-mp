@@ -1,8 +1,19 @@
 package jp.gr.aqua.adice.ui.screens
 
-import android.content.res.Resources
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.dicname_edict
+import adicermp.composeapp.generated.resources.dicname_ichirofj
+import adicermp.composeapp.generated.resources.dicname_pdej
+import adicermp.composeapp.generated.resources.dicname_webster
+import adicermp.composeapp.generated.resources.dldictionarytitle
+import adicermp.composeapp.generated.resources.install_action
+import adicermp.composeapp.generated.resources.install_disclaimer
+import adicermp.composeapp.generated.resources.install_provider_edict
+import adicermp.composeapp.generated.resources.install_provider_ichiro
+import adicermp.composeapp.generated.resources.install_provider_pdej
+import adicermp.composeapp.generated.resources.install_provider_webster
+import adicermp.composeapp.generated.resources.locale
 import android.net.Uri
-import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -24,25 +35,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import adicermp.composeapp.generated.resources.Res
-import adicermp.composeapp.generated.resources.dicname_edict
-import adicermp.composeapp.generated.resources.dicname_ichirofj
-import adicermp.composeapp.generated.resources.dicname_pdej
-import adicermp.composeapp.generated.resources.dicname_webster
-import adicermp.composeapp.generated.resources.dldictionarytitle
-import adicermp.composeapp.generated.resources.install_action
-import adicermp.composeapp.generated.resources.install_disclaimer
-import adicermp.composeapp.generated.resources.install_provider_edict
-import adicermp.composeapp.generated.resources.install_provider_ichiro
-import adicermp.composeapp.generated.resources.install_provider_pdej
-import adicermp.composeapp.generated.resources.install_provider_webster
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,14 +46,10 @@ fun InstallScreen(
     onNavigateBack: () -> Unit,
     onDownloadResult: (String) -> Unit
 ) {
-    val context = LocalContext.current
-    val resources = context.resources
-    val installItems = remember(resources.configuration) {
-        if (isJapanese(resources)) {
-            japaneseInstallItems()
-        } else {
-            englishInstallItems()
-        }
+    val installItems = if (stringResource(Res.string.locale) == "ja") {
+        japaneseInstallItems()
+    } else {
+        englishInstallItems()
     }
 
     Scaffold(
@@ -196,14 +188,4 @@ private fun japaneseInstallItems(): List<InstallDictionaryItem> {
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/f2jdic113.zip"
         )
     )
-}
-
-private fun isJapanese(resources: Resources): Boolean {
-    val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        resources.configuration.locales[0]
-    } else {
-        @Suppress("DEPRECATION")
-        resources.configuration.locale
-    }
-    return locale.language.equals(Locale.JAPANESE.language, ignoreCase = true)
 }

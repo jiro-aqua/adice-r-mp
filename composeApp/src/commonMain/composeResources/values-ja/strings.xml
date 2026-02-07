@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">aDice R</string>
+    <string name="locale">ja</string>
     <string name="settings">設定</string>
     <string name="setting_name">aDice設定</string>
     <string name="help">aDice Revisedについて</string>
