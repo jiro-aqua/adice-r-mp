@@ -3,7 +3,6 @@ package jp.gr.aqua.adice.ui.screens
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -28,9 +27,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import jp.gr.aqua.adice.R
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.dicname_edict
+import adicermp.composeapp.generated.resources.dicname_ichirofj
+import adicermp.composeapp.generated.resources.dicname_pdej
+import adicermp.composeapp.generated.resources.dicname_webster
+import adicermp.composeapp.generated.resources.dldictionarytitle
+import adicermp.composeapp.generated.resources.install_action
+import adicermp.composeapp.generated.resources.install_disclaimer
+import adicermp.composeapp.generated.resources.install_provider_edict
+import adicermp.composeapp.generated.resources.install_provider_ichiro
+import adicermp.composeapp.generated.resources.install_provider_pdej
+import adicermp.composeapp.generated.resources.install_provider_webster
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +63,7 @@ fun InstallScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.dldictionarytitle)) },
+                title = { Text(stringResource(Res.string.dldictionarytitle)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -70,16 +81,17 @@ fun InstallScreen(
         ) {
             item {
                 Text(
-                    text = stringResource(R.string.install_disclaimer),
+                    text = stringResource(Res.string.install_disclaimer),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
             items(installItems) { item ->
+                val title = stringResource(item.titleRes)
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(item.titleRes),
+                    text = title,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
@@ -89,12 +101,20 @@ fun InstallScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { onDownloadResult(item.buildInstallUri(resources)) },
+                    onClick = {
+                        onDownloadResult(
+                            buildInstallUri(
+                                name = title,
+                                english = item.english,
+                                site = item.site
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .height(40.dp)
                         .widthIn(min = 200.dp)
                 ) {
-                    Text(stringResource(R.string.install_action))
+                    Text(stringResource(Res.string.install_action))
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -103,17 +123,17 @@ fun InstallScreen(
 }
 
 private data class InstallDictionaryItem(
-    @StringRes val titleRes: Int,
-    @StringRes val providerRes: Int,
+    val titleRes: StringResource,
+    val providerRes: StringResource,
     val english: Boolean,
     val site: String
 )
 
-private fun InstallDictionaryItem.buildInstallUri(resources: Resources): String {
+private fun buildInstallUri(name: String, english: Boolean, site: String): String {
     return Uri.Builder()
         .scheme("adicer")
         .authority("install")
-        .appendQueryParameter("name", resources.getString(titleRes))
+        .appendQueryParameter("name", name)
         .appendQueryParameter("english", english.toString())
         .appendQueryParameter("site", site)
         .build()
@@ -123,26 +143,26 @@ private fun InstallDictionaryItem.buildInstallUri(resources: Resources): String 
 private fun englishInstallItems(): List<InstallDictionaryItem> {
     return listOf(
         InstallDictionaryItem(
-            titleRes = R.string.dicname_webster,
-            providerRes = R.string.install_provider_webster,
+            titleRes = Res.string.dicname_webster,
+            providerRes = Res.string.install_provider_webster,
             english = true,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/PDWD1913U.zip"
         ),
         InstallDictionaryItem(
-            titleRes = R.string.dicname_pdej,
-            providerRes = R.string.install_provider_pdej,
+            titleRes = Res.string.dicname_pdej,
+            providerRes = Res.string.install_provider_pdej,
             english = true,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/PDEJ2005U.zip"
         ),
         InstallDictionaryItem(
-            titleRes = R.string.dicname_edict,
-            providerRes = R.string.install_provider_edict,
+            titleRes = Res.string.dicname_edict,
+            providerRes = Res.string.install_provider_edict,
             english = false,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/PDEDICTU.zip"
         ),
         InstallDictionaryItem(
-            titleRes = R.string.dicname_ichirofj,
-            providerRes = R.string.install_provider_ichiro,
+            titleRes = Res.string.dicname_ichirofj,
+            providerRes = Res.string.install_provider_ichiro,
             english = false,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/f2jdic113.zip"
         )
@@ -152,26 +172,26 @@ private fun englishInstallItems(): List<InstallDictionaryItem> {
 private fun japaneseInstallItems(): List<InstallDictionaryItem> {
     return listOf(
         InstallDictionaryItem(
-            titleRes = R.string.dicname_pdej,
-            providerRes = R.string.install_provider_pdej,
+            titleRes = Res.string.dicname_pdej,
+            providerRes = Res.string.install_provider_pdej,
             english = true,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/PDEJ2005U.zip"
         ),
         InstallDictionaryItem(
-            titleRes = R.string.dicname_edict,
-            providerRes = R.string.install_provider_edict,
+            titleRes = Res.string.dicname_edict,
+            providerRes = Res.string.install_provider_edict,
             english = false,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/PDEDICTU.zip"
         ),
         InstallDictionaryItem(
-            titleRes = R.string.dicname_webster,
-            providerRes = R.string.install_provider_webster,
+            titleRes = Res.string.dicname_webster,
+            providerRes = Res.string.install_provider_webster,
             english = true,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/PDWD1913U.zip"
         ),
         InstallDictionaryItem(
-            titleRes = R.string.dicname_ichirofj,
-            providerRes = R.string.install_provider_ichiro,
+            titleRes = Res.string.dicname_ichirofj,
+            providerRes = Res.string.install_provider_ichiro,
             english = false,
             site = "aquamarine.sakura.ne.jp/sblo_files/pandora/image/f2jdic113.zip"
         )

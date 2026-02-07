@@ -36,15 +36,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jp.gr.aqua.adice.R
-import jp.gr.aqua.adice.model.ContextModel
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.adddictionarytitle
+import adicermp.composeapp.generated.resources.dictionaryimporttitle
+import adicermp.composeapp.generated.resources.dictionarymanagementtitle
+import adicermp.composeapp.generated.resources.dldictionarytitle
+import adicermp.composeapp.generated.resources.download_process
+import adicermp.composeapp.generated.resources.normalize_word
+import adicermp.composeapp.generated.resources.searchsettingtitle
+import adicermp.composeapp.generated.resources.setting_name
+import adicermp.composeapp.generated.resources.toastadded
+import adicermp.composeapp.generated.resources.toasterror
 import jp.gr.aqua.adice.model.DictionaryRepository
 import jp.gr.aqua.adice.model.PreferenceRepository
 import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
 import jp.sblo.pandora.dice.IdicInfo
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +71,14 @@ fun SettingsScreen(
     val dictionaryRepository = remember { DictionaryRepository() }
     var dicList by remember { mutableStateOf<List<IdicInfo>>(emptyList()) }
     var normalizeSearch by remember { mutableStateOf(preferenceRepository.readGeneralSettings().normalize) }
+    val completionResult = uiState.completionResult
+    val completionMessage = completionResult?.let { result ->
+        if (result.success) {
+            stringResource(Res.string.toastadded, result.dicName)
+        } else {
+            stringResource(Res.string.toasterror, result.dicName)
+        }
+    }
 
     // Refresh dictionary list
     fun refreshDicList() {
@@ -86,15 +103,10 @@ fun SettingsScreen(
     }
 
     // Handle completion
-    LaunchedEffect(uiState.completionResult) {
-        uiState.completionResult?.let { result ->
+    LaunchedEffect(completionResult) {
+        completionResult?.let {
             refreshDicList()
-            val message = if (result.success) {
-                ContextModel.resources.getString(R.string.toastadded, result.dicName)
-            } else {
-                ContextModel.resources.getString(R.string.toasterror, result.dicName)
-            }
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, completionMessage.orEmpty(), Toast.LENGTH_LONG).show()
             viewModel.clearCompletionResult()
         }
     }
@@ -102,7 +114,7 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.setting_name)) },
+                title = { Text(stringResource(Res.string.setting_name)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -118,12 +130,12 @@ fun SettingsScreen(
         ) {
             // Search Settings Category
             item {
-                SettingsCategoryHeader(title = stringResource(R.string.searchsettingtitle))
+                SettingsCategoryHeader(title = stringResource(Res.string.searchsettingtitle))
             }
 
             item {
                 SwitchSettingItem(
-                    title = stringResource(R.string.normalize),
+                    title = stringResource(Res.string.normalize_word),
                     checked = normalizeSearch,
                     onCheckedChange = { checked ->
                         normalizeSearch = checked
@@ -134,20 +146,20 @@ fun SettingsScreen(
 
             // Import Dictionary Category
             item {
-                SettingsCategoryHeader(title = stringResource(R.string.dictionaryimporttitle))
+                SettingsCategoryHeader(title = stringResource(Res.string.dictionaryimporttitle))
             }
 
             if (!uiState.isDownloading) {
                 item {
                     SettingsClickableItem(
-                        title = stringResource(R.string.adddictionarytitle),
+                        title = stringResource(Res.string.adddictionarytitle),
                         onClick = { openDocumentLauncher.launch(arrayOf("*/*")) }
                     )
                 }
 
                 item {
                     SettingsClickableItem(
-                        title = stringResource(R.string.dldictionarytitle),
+                        title = stringResource(Res.string.dldictionarytitle),
                         onClick = onNavigateToInstall
                     )
                 }
@@ -159,7 +171,7 @@ fun SettingsScreen(
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(stringResource(R.string.download_process))
+                        Text(stringResource(Res.string.download_process))
                         Spacer(modifier = Modifier.width(16.dp))
                         CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     }
@@ -168,7 +180,7 @@ fun SettingsScreen(
 
             // Dictionary Management Category
             item {
-                SettingsCategoryHeader(title = stringResource(R.string.dictionarymanagementtitle))
+                SettingsCategoryHeader(title = stringResource(Res.string.dictionarymanagementtitle))
             }
 
             itemsIndexed(dicList) { index, dicInfo ->

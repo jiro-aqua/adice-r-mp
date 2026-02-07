@@ -2,9 +2,20 @@ package jp.gr.aqua.adice.model
 
 import android.content.Context
 import androidx.preference.PreferenceManager
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.dicname_edict
+import adicermp.composeapp.generated.resources.dicname_eijiro
+import adicermp.composeapp.generated.resources.dicname_ichirofj
+import adicermp.composeapp.generated.resources.dicname_pdej
+import adicermp.composeapp.generated.resources.dicname_reijiro
+import adicermp.composeapp.generated.resources.dicname_ryakujiro
+import adicermp.composeapp.generated.resources.dicname_waeijiro
+import adicermp.composeapp.generated.resources.dicname_webster
 import jp.gr.aqua.adice.AdiceApplication
 import jp.gr.aqua.adice.BuildConfig
-import jp.gr.aqua.adice.R
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 class PreferenceRepository {
 
@@ -48,9 +59,9 @@ class PreferenceRepository {
                     if (match != null) {
                         val dicname = if (match.groupValues.size > 1) {
                             val edt = match.groupValues[1]
-                            ContextModel.resources.getString(DICNTEMPLATE[i].resourceDicname, edt)
+                            getStringByResource(DICNTEMPLATE[i].resourceDicname, edt)
                         } else {
-                            ContextModel.resources.getString(DICNTEMPLATE[i].resourceDicname)
+                            getStringByResource(DICNTEMPLATE[i].resourceDicname)
                         }
                         putString(KEY_DICNAME, dicname)
                         putBoolean(KEY_ENGLISH, DICNTEMPLATE[i].englishFlag)
@@ -101,6 +112,12 @@ class PreferenceRepository {
         dicsp.edit().clear().apply()
     }
 
+    private fun getStringByResource(resource: StringResource, vararg args: Any): String {
+        return runBlocking {
+            getString(resource, *args)
+        }
+    }
+
     fun isVersionUp(): Boolean {
         val lastVersion= sp.getInt(KEY_LASTVERSION, 0)
         val versioncode= BuildConfig.VERSION_CODE
@@ -149,17 +166,21 @@ class PreferenceRepository {
         const val KEY_REMOVE = "|Remove"
 
 
-        internal class DicTemplate(var pattern: String, var resourceDicname: Int, var englishFlag: Boolean)
+        internal class DicTemplate(
+            var pattern: String,
+            var resourceDicname: StringResource,
+            var englishFlag: Boolean
+        )
 
         private val DICNTEMPLATE = arrayOf(
-                DicTemplate("/EIJI[a-zA-Z]*-([0-9]+)U?.*\\.DIC", R.string.dicname_eijiro, true),
-                DicTemplate("/WAEI-([0-9]+)U?.*\\.DIC", R.string.dicname_waeijiro, false),
-                DicTemplate("/REIJI([0-9]+)U?.*\\.DIC", R.string.dicname_reijiro, false),
-                DicTemplate("/RYAKU([0-9]+)U?.*\\.DIC", R.string.dicname_ryakujiro, false),
-                DicTemplate("/PDEJ2005U?.dic", R.string.dicname_pdej, true),
-                DicTemplate("/PDEDICTU?.dic", R.string.dicname_edict, false),
-                DicTemplate("/PDWD1913U?.dic", R.string.dicname_webster, true),
-                DicTemplate("/f2jdic.dic", R.string.dicname_ichirofj, false)
+                DicTemplate("/EIJI[a-zA-Z]*-([0-9]+)U?.*\\.DIC", Res.string.dicname_eijiro, true),
+                DicTemplate("/WAEI-([0-9]+)U?.*\\.DIC", Res.string.dicname_waeijiro, false),
+                DicTemplate("/REIJI([0-9]+)U?.*\\.DIC", Res.string.dicname_reijiro, false),
+                DicTemplate("/RYAKU([0-9]+)U?.*\\.DIC", Res.string.dicname_ryakujiro, false),
+                DicTemplate("/PDEJ2005U?.dic", Res.string.dicname_pdej, true),
+                DicTemplate("/PDEDICTU?.dic", Res.string.dicname_edict, false),
+                DicTemplate("/PDWD1913U?.dic", Res.string.dicname_webster, true),
+                DicTemplate("/f2jdic.dic", Res.string.dicname_ichirofj, false)
         )
     }
 }

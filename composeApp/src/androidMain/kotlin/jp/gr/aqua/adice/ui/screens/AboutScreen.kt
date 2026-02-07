@@ -32,11 +32,15 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.description
+import adicermp.composeapp.generated.resources.help
+import adicermp.composeapp.generated.resources.manual
+import adicermp.composeapp.generated.resources.manual_url
 import jp.gr.aqua.adice.BuildConfig
-import jp.gr.aqua.adice.R
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +50,7 @@ fun AboutScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.help)) },
+                title = { Text(stringResource(Res.string.help)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -90,14 +94,14 @@ fun AboutScreen(
             }
             item {
                 Text(
-                    text = stringResource(R.string.description),
+                    text = stringResource(Res.string.description),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
             item {
                 ExternalLinkText(
-                    text = stringResource(R.string.manual),
-                    url = stringResource(R.string.manual_url),
+                    text = stringResource(Res.string.manual),
+                    url = stringResource(Res.string.manual_url),
                     onClick = { openExternalUrl(context, uriHandler, it) }
                 )
             }

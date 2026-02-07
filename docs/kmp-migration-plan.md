@@ -108,13 +108,13 @@
    - ターゲット: `android()`, `jvm("desktop")` を基本とする。
    - 依存整理: `okio`, `kotlinx.coroutines`, Compose MP, テスト（`kotlin.test`）。
    - 既存 `app/` の Gradle を KMP 構成に合わせて段階移行する。
-1. android依存処理をラッパーを作ってcommonMainとandroidMainに分割する
-   - 
+1. Android依存処理をラッパーを作ってcommonMainとandroidMainに分割する
 1. 共通化できるところをcommonMainで共通化
    - WebViewでレイアウトを作っている画面を、composeでレイアウトする
    - 辞書ダウンロード処理をcommonMainに移動
 1. assets/resourceをcompose resourcesに移動
 1. フォントは一旦無効化
+1. ToastをSnackbarにリプレイス
 1. androidMainの処理をcommonMainに移動していく
    - テストを `commonTest`/ に寄せ、KMP で共有できる形にする。
 1. フォントをcompose resourcesに入れてcompose MPで使用する

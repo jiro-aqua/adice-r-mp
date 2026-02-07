@@ -18,11 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import jp.gr.aqua.adice.R
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.morebtn
+import adicermp.composeapp.generated.resources.noresulthtml
 import jp.gr.aqua.adice.model.ResultModel
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -101,7 +103,7 @@ fun MoreResultItem(onClick: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(R.string.morebtn),
+            text = stringResource(Res.string.morebtn),
             color = Color.Black,
             fontSize = 16.sp
         )
@@ -125,7 +127,7 @@ fun NoneResultItem(result: ResultModel) {
 @Composable
 fun NoResultItem() {
     Text(
-        text = stringResource(R.string.noresulthtml),
+        text = stringResource(Res.string.noresulthtml),
         color = Color.Black,
         fontSize = 16.sp,
         modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)

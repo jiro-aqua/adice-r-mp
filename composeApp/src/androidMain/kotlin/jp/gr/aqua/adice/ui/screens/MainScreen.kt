@@ -28,15 +28,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jp.gr.aqua.adice.R
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.app_name
+import adicermp.composeapp.generated.resources.help
+import adicermp.composeapp.generated.resources.settings
 import jp.gr.aqua.adice.model.PreferenceRepository
 import jp.gr.aqua.adice.model.ResultModel
 import jp.gr.aqua.adice.ui.components.SearchResultList
 import jp.gr.aqua.adice.ui.components.SearchTextField
 import jp.gr.aqua.adice.viewmodel.AdiceViewModel
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,7 +126,7 @@ fun MainScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
+                title = { Text(stringResource(Res.string.app_name)) },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
                         Icon(Icons.Default.MoreVert, contentDescription = "Menu")
@@ -133,14 +136,14 @@ fun MainScreen(
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(R.string.settings)) },
+                            text = { Text(stringResource(Res.string.settings)) },
                             onClick = {
                                 showMenu = false
                                 onNavigateToSettings()
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text(stringResource(R.string.help)) },
+                            text = { Text(stringResource(Res.string.help)) },
                             onClick = {
                                 showMenu = false
                                 onNavigateToAbout()

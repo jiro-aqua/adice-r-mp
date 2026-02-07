@@ -33,11 +33,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import jp.gr.aqua.adice.R
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.dictionarymanagementtitle
+import adicermp.composeapp.generated.resources.dictionarynametitle
+import adicermp.composeapp.generated.resources.dictionarypathtitle
+import adicermp.composeapp.generated.resources.enabledictionarysummaryoff
+import adicermp.composeapp.generated.resources.enabledictionarysummaryon
+import adicermp.composeapp.generated.resources.enabledictionarytitle
+import adicermp.composeapp.generated.resources.englishsummaryoff
+import adicermp.composeapp.generated.resources.englishsummaryon
+import adicermp.composeapp.generated.resources.englishtitle
+import adicermp.composeapp.generated.resources.label_close
+import adicermp.composeapp.generated.resources.movedowntitle
+import adicermp.composeapp.generated.resources.moveuptitle
+import adicermp.composeapp.generated.resources.numberofresulttitle
+import adicermp.composeapp.generated.resources.removedictionarytitle
+import adicermp.composeapp.generated.resources.toastremoved
 import jp.gr.aqua.adice.model.DictionaryRepository
 import jp.gr.aqua.adice.model.PreferenceRepository
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +65,7 @@ fun DictionarySettingsScreen(
     val preferenceRepository = remember { PreferenceRepository() }
     val dictionaryRepository = remember { DictionaryRepository() }
     val dicListSize = remember { dictionaryRepository.getDicList().size }
+    val toastRemovedMessage = stringResource(Res.string.toastremoved, filename)
 
     var dicName by remember { mutableStateOf("") }
     var isEnglish by remember { mutableStateOf(false) }
@@ -99,11 +115,11 @@ fun DictionarySettingsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             // Category Header
-            SettingsCategoryHeader(title = stringResource(R.string.dictionarymanagementtitle))
+            SettingsCategoryHeader(title = stringResource(Res.string.dictionarymanagementtitle))
 
             // Path
             SettingsInfoItem(
-                title = stringResource(R.string.dictionarypathtitle),
+                title = stringResource(Res.string.dictionarypathtitle),
                 value = filename
             )
 
@@ -116,7 +132,7 @@ fun DictionarySettingsScreen(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.dictionarynametitle),
+                    text = stringResource(Res.string.dictionarynametitle),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 OutlinedTextField(
@@ -136,7 +152,7 @@ fun DictionarySettingsScreen(
 
             // Number of results
             SettingsClickableItem(
-                title = stringResource(R.string.numberofresulttitle),
+                title = stringResource(Res.string.numberofresulttitle),
                 subtitle = resultNum.toString(),
                 onClick = { showResultNumDialog = true }
             )
@@ -145,11 +161,11 @@ fun DictionarySettingsScreen(
 
             // English dictionary
             SwitchSettingItem(
-                title = stringResource(R.string.englishtitle),
+                title = stringResource(Res.string.englishtitle),
                 subtitle = if (isEnglish)
-                    stringResource(R.string.englishsummaryon)
+                    stringResource(Res.string.englishsummaryon)
                 else
-                    stringResource(R.string.englishsummaryoff),
+                    stringResource(Res.string.englishsummaryoff),
                 checked = isEnglish,
                 onCheckedChange = {
                     isEnglish = it
@@ -161,11 +177,11 @@ fun DictionarySettingsScreen(
 
             // Enable dictionary
             SwitchSettingItem(
-                title = stringResource(R.string.enabledictionarytitle),
+                title = stringResource(Res.string.enabledictionarytitle),
                 subtitle = if (isEnabled)
-                    stringResource(R.string.enabledictionarysummaryon)
+                    stringResource(Res.string.enabledictionarysummaryon)
                 else
-                    stringResource(R.string.enabledictionarysummaryoff),
+                    stringResource(Res.string.enabledictionarysummaryoff),
                 checked = isEnabled,
                 onCheckedChange = {
                     isEnabled = it
@@ -178,7 +194,7 @@ fun DictionarySettingsScreen(
             // Move Up
             if (index > 0) {
                 SettingsClickableItem(
-                    title = stringResource(R.string.moveuptitle),
+                    title = stringResource(Res.string.moveuptitle),
                     onClick = {
                         dictionaryRepository.swap(filename, up = true)
                         onNavigateBack()
@@ -190,7 +206,7 @@ fun DictionarySettingsScreen(
             // Move Down
             if (index < dicListSize - 1) {
                 SettingsClickableItem(
-                    title = stringResource(R.string.movedowntitle),
+                    title = stringResource(Res.string.movedowntitle),
                     onClick = {
                         dictionaryRepository.swap(filename, up = false)
                         onNavigateBack()
@@ -201,7 +217,7 @@ fun DictionarySettingsScreen(
 
             // Remove
             SettingsClickableItem(
-                title = stringResource(R.string.removedictionarytitle),
+                title = stringResource(Res.string.removedictionarytitle),
                 onClick = { showRemoveDialog = true }
             )
         }
@@ -224,14 +240,14 @@ fun DictionarySettingsScreen(
     if (showRemoveDialog) {
         AlertDialog(
             onDismissRequest = { showRemoveDialog = false },
-            title = { Text(stringResource(R.string.removedictionarytitle)) },
+            title = { Text(stringResource(Res.string.removedictionarytitle)) },
             text = { Text(filename) },
             confirmButton = {
                 TextButton(onClick = {
                     dictionaryRepository.remove(filename)
                     Toast.makeText(
                         context,
-                        context.getString(R.string.toastremoved, filename),
+                        toastRemovedMessage,
                         Toast.LENGTH_LONG
                     ).show()
                     showRemoveDialog = false
@@ -242,7 +258,7 @@ fun DictionarySettingsScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showRemoveDialog = false }) {
-                    Text(stringResource(R.string.label_close))
+                    Text(stringResource(Res.string.label_close))
                 }
             }
         )
@@ -305,7 +321,7 @@ private fun ResultNumDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.numberofresulttitle)) },
+        title = { Text(stringResource(Res.string.numberofresulttitle)) },
         text = {
             Column {
                 options.forEach { num ->

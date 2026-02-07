@@ -4,8 +4,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import jp.gr.aqua.adice.R
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.label_close
+import adicermp.composeapp.generated.resources.label_download
+import adicermp.composeapp.generated.resources.welcome_message
+import adicermp.composeapp.generated.resources.welcome_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun WelcomeDialog(
@@ -14,16 +18,16 @@ fun WelcomeDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.welcome_title)) },
-        text = { Text(stringResource(R.string.welcome_message)) },
+        title = { Text(stringResource(Res.string.welcome_title)) },
+        text = { Text(stringResource(Res.string.welcome_message)) },
         confirmButton = {
             TextButton(onClick = onDownload) {
-                Text(stringResource(R.string.label_download))
+                Text(stringResource(Res.string.label_download))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.label_close))
+                Text(stringResource(Res.string.label_close))
             }
         }
     )

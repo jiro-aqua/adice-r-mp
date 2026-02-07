@@ -13,9 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import jp.gr.aqua.adice.R
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.menu_copy_all
+import adicermp.composeapp.generated.resources.menu_copy_index
+import adicermp.composeapp.generated.resources.menu_share
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ResultLongClickDialog(
@@ -33,7 +36,7 @@ fun ResultLongClickDialog(
             Column {
                 // Share
                 Text(
-                    text = stringResource(R.string.menu_share),
+                    text = stringResource(Res.string.menu_share),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
@@ -51,7 +54,7 @@ fun ResultLongClickDialog(
 
                 // Copy index
                 Text(
-                    text = stringResource(R.string.menu_copy_index),
+                    text = stringResource(Res.string.menu_copy_index),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
@@ -64,7 +67,7 @@ fun ResultLongClickDialog(
 
                 // Copy all
                 Text(
-                    text = stringResource(R.string.menu_copy_all),
+                    text = stringResource(Res.string.menu_copy_all),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {

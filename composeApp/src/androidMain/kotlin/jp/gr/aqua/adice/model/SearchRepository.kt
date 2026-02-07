@@ -3,14 +3,22 @@ package jp.gr.aqua.adice.model
 import android.graphics.Typeface
 import android.text.Html
 import android.util.Log
+import android.content.res.Configuration
+import adicermp.composeapp.generated.resources.Res
+import adicermp.composeapp.generated.resources.description
+import adicermp.composeapp.generated.resources.resulttitlehtml
+import adicermp.composeapp.generated.resources.trans_text_size
+import adicermp.composeapp.generated.resources.trans_text_size_large
 import jp.gr.aqua.adice.BuildConfig
-import jp.gr.aqua.adice.R
 import jp.sblo.pandora.dice.DiceFactory
 import jp.sblo.pandora.dice.IdicInfo
 import jp.sblo.pandora.dice.IdicResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 class SearchRepository {
     private var mInitialized = false
@@ -269,11 +277,17 @@ class SearchRepository {
     }
 
     private fun loadResources() {
-        mFooter = ContextModel.resources.getString(R.string.resulttitlehtml)
-        mDescription = ContextModel.resources.getString(R.string.description)
+        mFooter = runBlocking { getString(Res.string.resulttitlehtml) }
+        mDescription = runBlocking { getString(Res.string.description) }
         mStartPage = ContextModel.assets.open("start.html").bufferedReader(charset = Charsets.UTF_8).readText()
         phoneticFont = Typeface.createFromAsset(ContextModel.assets, "DoulosSILR.ttf")
-        transTextSize = ContextModel.resources.getInteger(R.integer.transTextSize)
+        val screenLayout = ContextModel.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+        val transTextSizeRes: StringResource = if (screenLayout >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            Res.string.trans_text_size_large
+        } else {
+            Res.string.trans_text_size
+        }
+        transTextSize = runBlocking { getString(transTextSizeRes) }.toIntOrNull() ?: 16
     }
 
     companion object {
