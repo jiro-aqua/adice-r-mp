@@ -41,7 +41,6 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.lifecycle.viewmodel)
             implementation(libs.compose.lifecycle.runtime)
-            implementation(libs.compose.navigation3.runtime)
             implementation(libs.compose.navigation3.ui)
 
             //okio/okhttp
@@ -106,7 +105,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "jp.gr.aqua.adicer.mp.MainKt"
+        mainClass = "jp.gr.aqua.adice.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

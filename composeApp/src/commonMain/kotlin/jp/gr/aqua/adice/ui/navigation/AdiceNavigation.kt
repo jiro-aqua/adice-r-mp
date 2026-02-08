@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
 import jp.gr.aqua.adice.ui.dialogs.ResultClickDialog
 import jp.gr.aqua.adice.ui.dialogs.ResultLongClickDialog
 import jp.gr.aqua.adice.ui.dialogs.WelcomeDialog
@@ -20,6 +21,9 @@ import jp.gr.aqua.adice.ui.screens.SettingsScreen
 import jp.gr.aqua.adice.viewmodel.AdiceViewModel
 import jp.gr.aqua.adice.viewmodel.PreferencesGeneralViewModel
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 @Serializable
 sealed interface Screen : NavKey {
@@ -46,7 +50,21 @@ fun AdiceNavHost(
     settingsViewModel: PreferencesGeneralViewModel,
     onMoveTaskToBack: () -> Unit
 ) {
-    val backStack = rememberNavBackStack(Screen.Main)
+    val savedStateConfiguration = remember {
+        SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                polymorphic(NavKey::class) {
+                    subclass(Screen.Main.serializer())
+                    subclass(Screen.About.serializer())
+                    subclass(Screen.Install.serializer())
+                    subclass(Screen.Settings.serializer())
+                    subclass(Screen.DictionarySettings.serializer())
+                }
+            }
+        }
+    }
+
+    val backStack = rememberNavBackStack(savedStateConfiguration, Screen.Main)
 
     fun popBackStack() {
         if (backStack.size > 1) {
